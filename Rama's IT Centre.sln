@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sales DashBoard", "Sales DashBoard\Sales DashBoard.vbproj", "{AEEBEEC9-A0C5-4307-AAA9-6657E171FD49}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "The Dux Palace", "Sales DashBoard\The Dux Palace.vbproj", "{AEEBEEC9-A0C5-4307-AAA9-6657E171FD49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
