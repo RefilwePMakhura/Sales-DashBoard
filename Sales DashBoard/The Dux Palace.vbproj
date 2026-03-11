@@ -144,6 +144,18 @@
     <Compile Include="Invoice Dashboard\Cart.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Invoice Dashboard\Order Sales.Designer.vb">
+      <DependentUpon>Order Sales.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Invoice Dashboard\Order Sales.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Invoice Dashboard\Payable.Designer.vb">
+      <DependentUpon>Payable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Invoice Dashboard\Payable.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Login.Designer.vb">
       <DependentUpon>Login.vb</DependentUpon>
     </Compile>
@@ -338,6 +350,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Invoice Dashboard\Cart.resx">
       <DependentUpon>Cart.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoice Dashboard\Order Sales.resx">
+      <DependentUpon>Order Sales.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoice Dashboard\Payable.resx">
+      <DependentUpon>Payable.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.vb</DependentUpon>

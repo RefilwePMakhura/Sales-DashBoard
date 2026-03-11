@@ -78,6 +78,8 @@ Partial Class Create_Invoice
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -195,6 +197,8 @@ Partial Class Create_Invoice
         'Panel3
         '
         Me.Panel3.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.Panel3.Controls.Add(Me.Label25)
+        Me.Panel3.Controls.Add(Me.TextBox2)
         Me.Panel3.Controls.Add(Me.txtTotalAmount)
         Me.Panel3.Controls.Add(Me.txtSubtotal)
         Me.Panel3.Controls.Add(Me.txtTax)
@@ -210,28 +214,28 @@ Partial Class Create_Invoice
         '
         'txtTotalAmount
         '
-        Me.txtTotalAmount.Location = New System.Drawing.Point(120, 117)
+        Me.txtTotalAmount.Location = New System.Drawing.Point(120, 114)
         Me.txtTotalAmount.Name = "txtTotalAmount"
         Me.txtTotalAmount.Size = New System.Drawing.Size(140, 20)
         Me.txtTotalAmount.TabIndex = 32
         '
         'txtSubtotal
         '
-        Me.txtSubtotal.Location = New System.Drawing.Point(120, 18)
+        Me.txtSubtotal.Location = New System.Drawing.Point(120, 6)
         Me.txtSubtotal.Name = "txtSubtotal"
         Me.txtSubtotal.Size = New System.Drawing.Size(140, 20)
         Me.txtSubtotal.TabIndex = 1
         '
         'txtTax
         '
-        Me.txtTax.Location = New System.Drawing.Point(120, 51)
+        Me.txtTax.Location = New System.Drawing.Point(120, 60)
         Me.txtTax.Name = "txtTax"
         Me.txtTax.Size = New System.Drawing.Size(140, 20)
         Me.txtTax.TabIndex = 2
         '
         'txtDiscount
         '
-        Me.txtDiscount.Location = New System.Drawing.Point(120, 84)
+        Me.txtDiscount.Location = New System.Drawing.Point(120, 87)
         Me.txtDiscount.Name = "txtDiscount"
         Me.txtDiscount.Size = New System.Drawing.Size(140, 20)
         Me.txtDiscount.TabIndex = 3
@@ -240,7 +244,7 @@ Partial Class Create_Invoice
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(6, 55)
+        Me.Label3.Location = New System.Drawing.Point(6, 61)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(32, 13)
         Me.Label3.TabIndex = 27
@@ -250,7 +254,7 @@ Partial Class Create_Invoice
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(6, 25)
+        Me.Label4.Location = New System.Drawing.Point(6, 9)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(58, 13)
         Me.Label4.TabIndex = 28
@@ -260,7 +264,7 @@ Partial Class Create_Invoice
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(3, 115)
+        Me.Label5.Location = New System.Drawing.Point(3, 113)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(86, 13)
         Me.Label5.TabIndex = 30
@@ -270,7 +274,7 @@ Partial Class Create_Invoice
         '
         Me.Label22.AutoSize = True
         Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label22.Location = New System.Drawing.Point(3, 85)
+        Me.Label22.Location = New System.Drawing.Point(3, 87)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(61, 13)
         Me.Label22.TabIndex = 29
@@ -632,6 +636,23 @@ Partial Class Create_Invoice
         Me.TextBox1.Size = New System.Drawing.Size(174, 20)
         Me.TextBox1.TabIndex = 34
         '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label25.Location = New System.Drawing.Point(6, 35)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(58, 13)
+        Me.Label25.TabIndex = 37
+        Me.Label25.Text = "Quantity:"
+        '
+        'TextBox2
+        '
+        Me.TextBox2.Location = New System.Drawing.Point(120, 33)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(140, 20)
+        Me.TextBox2.TabIndex = 38
+        '
         'Create_Invoice
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -720,4 +741,6 @@ Partial Class Create_Invoice
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Label24 As Label
     Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents Label25 As Label
+    Friend WithEvents TextBox2 As TextBox
 End Class

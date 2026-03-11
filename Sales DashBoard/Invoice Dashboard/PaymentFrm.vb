@@ -231,30 +231,6 @@ Public Class PaymentFrm
 
     End Sub
 
-    'Private Sub UpdateClosingBalance(BankName As Integer)
-    '    Using conn As New OleDbConnection(ConnectionString)
-    '        conn.Open()
-
-    '        Dim cmdOpening As New OleDbCommand("SELECT OpeningBalance FROM BankAccount WHERE BankName =?", conn)
-
-    '        cmdOpening.Parameters.AddWithValue("BankName", BankName)
-    '        Dim 
-    '    End Using
-    'End Sub
-    'Private Sub LoadBankAccounts()
-
-    '    Using conn As New OleDbConnection(ConnectionString)
-    '        Dim da As New OleDbDataAdapter("SELECT AccountNumber, BankName FROM [BankAccount] WHERE IsActive=True", conn)
-    '        Dim dt As New DataTable
-    '        da.Fill(dt)
-    '        ComboBox1.DataSource = dt
-    '        ComboBox1.DisplayMember = "BankName"
-    '        ComboBox1.ValueMember = "AccountNumber"
-    '        ComboBox1.SelectedIndex = -1
-    '    End Using
-    'End Sub
-
-
 
     '  MAIN PAYMENT PROCESS FUNCTION
     Private Sub ProcessPayment()
@@ -323,61 +299,7 @@ Public Class PaymentFrm
 
     End Sub
 
-    '    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-    '        If txtInvoiceNo.Text = "" Then
-    '            MessageBox.Show("Please enter Invoice Number")
-    '            Exit Sub
-    '        End If
 
-    '        Dim conn As New OleDbConnection("Your_Connection_String_Here")
-    '        conn.Open()
-
-    '        Dim transaction As OleDbTransaction = conn.BeginTransaction()
-
-    '        Try
-    '            Dim cmdPayment As New OleDbCommand("
-    'INSERT INTO Payment (InvoiceNo, Payment, Customer, TotalAmount,PaymentMethod, AmountPaid, BankAccount,Status)Values (?,?,?,?,?,?,?,?", conn, transaction)
-
-
-    '            cmdPayment.Parameters.AddWithValue("?", txtInvoiceNo.Text)
-    '            cmdPayment.Parameters.AddWithValue("?", DateTimePicker1.Value)
-    '            cmdPayment.Parameters.AddWithValue("?", cmbStatus.Text)
-    '            cmdPayment.Parameters.AddWithValue("?", cmbPaymentMethod.Text)
-    '            cmdPayment.Parameters.AddWithValue("?", txtAmountPaid.Text)
-    '            cmdPayment.Parameters.AddWithValue("?", txtTotalAmount.Text)
-    '            cmdPayment.Parameters.AddWithValue("?", "Paid")
-    '            cmdPayment.ExecuteNonQuery()
-
-    '            Dim cmdInvoice As New OleDbCommand("
-    'Update Invoices
-    'Set Status = ?
-    'WHERE InvoiceNumber =?", conn, transaction)
-
-    '            cmdInvoice.Parameters.AddWithValue("?", "Paid")
-    '            cmdInvoice.Parameters.AddWithValue("?", txtInvoiceNo.Text)
-    '            cmdInvoice.ExecuteNonQuery()
-
-    '            Dim cmdBank As New OleDbCommand("
-    'Insert INTO BankTransaction(BankAccountID,TransactionDate,Amount,Type,ReferenceType,ReferenceID,Notes)VALUES (?,?,?,?,?,?,?", conn, transaction)
-    '            cmdBank.Parameters.AddWithValue("?", ComboBox1.Text)
-    '            cmdBank.Parameters.AddWithValue("?", DateTimePicker1.Value)
-    '            cmdBank.Parameters.AddWithValue("?", txtAmountPaid.Text)
-    '            cmdBank.Parameters.AddWithValue("?", "Deposit")
-    '            cmdBank.Parameters.AddWithValue("?", "Create_Details")
-    '            cmdBank.Parameters.AddWithValue("?", txtInvoiceNo.Text)
-    '            cmdBank.Parameters.AddWithValue("?", "Invoice Payment")
-    '            cmdBank.ExecuteNonQuery()
-
-    '            transaction.Commit()
-    '            MessageBox.Show("Payment Saved Successfully")
-
-    '        Catch ex As Exception
-    '            transaction.Rollback()
-    '            MessageBox.Show("Error:" & ex.Message)
-    '        Finally
-    '            conn.Close()
-    '        End Try
-    '    End Sub
 
     Private Sub Panel1_Paint(sender As Object, e As PaintEventArgs) Handles Panel1.Paint
 
@@ -389,30 +311,8 @@ Public Class PaymentFrm
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         If ComboBox1.SelectedIndex = 0 Then
-            '        '  txtAmountPaid.Text = ""
-            '        Exit Sub
+
         End If
-
-        '    Dim SelectedBank As String = ComboBox1.Text
-        '    Dim ClosingBalance As Decimal = 
-
-        '    Try
-        '        Using conn As New OleDbConnection(ConnectionString)
-        '            conn.Open()
-        '            Using cmd As New OleDbCommand("SELECT ClosingBalance From [BankAccount] WHERE BankName =?", conn)
-        '                cmd.Parameters.AddWithValue("?", SelectedBank)
-        '                Dim result =
-        '                        cmd.ExecuteScalar
-        '                If result IsNot Nothing AndAlso Not IsDBNull(result) Then
-        '                    Decimal.TryParse(result.ToString(), ClosingBalance)
-        '                End If
-
-        '            End Using
-        '        End Using
-        '        '  txtAmountPaid.Text = ClosingBalance.ToString("0.00")
-        '    Catch ex As Exception
-        '        MessageBox.Show(ex.Message)
-        '    End Try
 
     End Sub
 End Class

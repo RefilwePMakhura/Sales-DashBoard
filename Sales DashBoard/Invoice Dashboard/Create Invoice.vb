@@ -12,13 +12,7 @@ Public Class Create_Invoice
     Public Property SelectedDiscount As String
     Public Property SelectedVAT As String
     Public Property SelectedTotal As String
-    Public Property LineTotal As Integer
-    'Public Property InvoiceID As Integer
-    Public Property TotalAmount As Decimal
-    '  Public Property Product As String
-    Public Property Quantity As Decimal
-    Public Property UnitPrice As Decimal
-    Public Property InvoiceID As String
+
     '--- Constructor ---
     ' Private InvoiceID As Integer
 
@@ -26,7 +20,11 @@ Public Class Create_Invoice
         InitializeComponent()
 
     End Sub
+    Dim invoiceid As String
+    Public Sub addInvoiceItem(Product As String, Quantity As Integer, Subtotal As Decimal, VAT As Decimal, Discount As Decimal, Total As Decimal)
+        DgvInvoiceLines.Rows.Add(InvoiceID, Product, Quantity, Subtotal.ToString("0.00"), VAT.ToString("0.00"), Discount.ToString("0.00"), Total.ToString("0.00"))
 
+    End Sub
     Private Function GetLastTransactionFromSales() As String
         Try
             Dim salesFilePath As String = "C:\Temp\Sales.csv"
@@ -57,9 +55,32 @@ Public Class Create_Invoice
         DgvInvoiceLines.DataSource = dt
     End Sub
 
-
+    Private Sub clearform()
+        txtDiscount.Clear()
+        txtSubtotal.Clear()
+        txtTax.Clear()
+        txtTotalAmount.Clear()
+    End Sub
     '--- When Form Loads ---
     Private Sub Create_Invoice_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'Try
+        SetupInvoiceGrid()
+
+        '    '  txtInvoiceID.Text =InvoiceID()
+
+        '    If SelectedProduct <> "" Then
+        '        addInvoiceItem(SelectedProduct, SelectedQuantity, SelectedSubtotal, SelectedVAT, SelectedDiscount, SelectedTotal)
+
+        '    End If
+
+        CalculateGrandTotals()
+
+        'Catch ex As Exception
+        '    MessageBox.Show("Error loading invoice form: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        'End Try
+
+
+
         LoadCompanyInfo()
         UpdateTotals()
         cmbStatus.Items.AddRange(New Object() {"Pending", "Paid"})
@@ -68,14 +89,14 @@ Public Class Create_Invoice
         cmbTerms.Items.AddRange(New String() {"Cash", "EFT", "Debit Card", "Bank Deposit"})
         cmbTerms.SelectedIndex = 0
         ReloadCustomersCombo()
-
+        '   clearform()
         ' Load products BEFORE setting up grid
         '   LoadProducts()
-        SetupInvoiceGrid()
-        If Not String.IsNullOrEmpty(InvoiceID) Then
-            txtInvoiceID.Text = InvoiceID
-            LoadSalesOrderDetails(InvoiceID)
-        End If
+
+        'If Not String.IsNullOrWhiteSpace(OrderID) Then
+        '    txtInvoiceID.Text = InvoiceID
+        '    LoadSalesOrderDetails(InvoiceID)
+        'End If
         DgvInvoiceLines.ClearSelection()
         DgvInvoiceLines.CurrentCell = Nothing
         AddHandler DgvInvoiceLines.DataError, AddressOf DgvInvoiceLines_DataError
@@ -88,7 +109,7 @@ Public Class Create_Invoice
                 .Cells("Subtotal").Value = SelectedSubtotal
                 .Cells("Discount").Value = SelectedDiscount
                 .Cells("VAT").Value = SelectedVAT
-                .Cells("Total_Amount").Value = SelectedTotal
+                .Cells("Total").Value = SelectedTotal
             End With
         End If
         Try
@@ -114,7 +135,51 @@ Public Class Create_Invoice
 
 
     End Sub
+    Private Sub CalculateGrandTotals()
+        Dim subtotalsum As Decimal = 0D
+        Dim vatsum As Decimal = 0D
+        Dim discountsum As Decimal = 0D
+        Dim totalsum As Decimal = 0D
+        Dim qtytotal As Integer = 0
+        For Each row As DataGridViewRow In DgvInvoiceLines.Rows
+            If row.IsNewRow Then Continue For
 
+            If row.Cells("Subtotal").Value IsNot Nothing AndAlso
+               IsNumeric(row.Cells("Subtotal").Value) Then
+                subtotalsum +=
+                    CDec(row.Cells("Subtotal").Value)
+            End If
+
+            If row.Cells("Quantity").Value Then
+                qtytotal +=
+                    CInt(row.Cells("Quantity").Value)
+            End If
+
+            If row.Cells("VAT").Value IsNot Nothing AndAlso
+               IsNumeric(row.Cells("VAT").Value) Then
+                vatsum +=
+                    CDec(row.Cells("VAT").Value)
+            End If
+
+            If row.Cells("Discount").Value IsNot Nothing AndAlso
+               IsNumeric(row.Cells("Discount").Value) Then
+                discountsum +=
+                    CDec(row.Cells("Discount").Value)
+            End If
+
+            If row.Cells("Total").Value IsNot Nothing AndAlso
+               IsNumeric(row.Cells("Total").Value) Then
+                totalsum +=
+                    CDec(row.Cells("Total").Value)
+            End If
+        Next
+
+        TextBox2.Text = qtytotal.ToString("")
+        txtSubtotal.Text = subtotalsum.ToString("0.00")
+        txtTax.Text = vatsum.ToString("0.00")
+        txtDiscount.Text = discountsum.ToString("0.00")
+        txtTotalAmount.Text = totalsum.ToString("0.00")
+    End Sub
 
     Private Sub DataGridView1_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles DgvInvoiceLines.EditingControlShowing
         'If TypeOf e.Control Is ComboBox Then
@@ -133,12 +198,8 @@ Public Class Create_Invoice
         End If
     End Sub
 
-    'Private Sub PopulateTextBoxes(row As DataGridViewRow)
-    '    If row Is Nothing OrElse row.IsNewRow Then Exit Sub
-    '    txtSubtotal.Text = Convert.ToDecimal(row.Cells("LineTotal").Value).ToString("N2")
-    '    txtTax.Text = Convert.ToDecimal(row.Cells("VAT").Value).ToString("N2")
-    '    txtTotalAmount.Text = Convert.ToDecimal(row.Cells("TotalWithVAT").Value).ToString("N2")
-    'End Sub
+
+
 
     Private Sub ProductCombo_SelectedIndexChanged(sender As Object, e As EventArgs)
         Dim combo As ComboBox = CType(sender, ComboBox)
@@ -157,7 +218,7 @@ Public Class Create_Invoice
             currentRow.Cells("Subtotal").Value = unitPrice.ToString("F2")
             currentRow.Cells("Quantity").Value = ""
             currentRow.Cells("InvoiceID").Value = InvoiceId.ToString()
-            currentRow.Cells("Total_Amount").Value = unitPrice.ToString("F2")
+            currentRow.Cells("Total").Value = unitPrice.ToString("F2")
             currentRow.Cells("Discount").Value = discount.ToString(unitPrice * 0.05)
         End If
     End Sub
@@ -168,14 +229,6 @@ Public Class Create_Invoice
 
     End Sub
 
-    '======================
-    ' COMMIT EDITS QUICKLY
-    '======================
-    'Private Sub dgvInvoiceLines_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles DgvInvoiceLines.CurrentCellDirtyStateChanged
-    '    If DgvInvoiceLines.IsCurrentCellDirty Then
-    '        DgvInvoiceLines.CommitEdit(DataGridViewDataErrorContexts.Commit)
-    '    End If
-    'End Sub
 
     '======================
     ' RECALCULATE INVOICE TOTAL
@@ -185,7 +238,7 @@ Public Class Create_Invoice
         For Each row As DataGridViewRow In DgvInvoiceLines.Rows
             If row.IsNewRow Then Continue For
             Dim lineTotal As Decimal = 0D
-            Decimal.TryParse(Convert.ToString(row.Cells("Total_Amount").Value), lineTotal)
+            Decimal.TryParse(Convert.ToString(row.Cells("Total").Value), lineTotal)
             grandTotal += lineTotal
         Next
 
@@ -227,6 +280,7 @@ Public Class Create_Invoice
         End Using
     End Sub
 
+
     'Public Sub LoadProduct()
     '    Dim dt As New DataTable
     '    Dim da As New OleDbDataAdapter("SELECT Product_Name FROM Products", conn)
@@ -242,6 +296,7 @@ Public Class Create_Invoice
     Public Sub SetupInvoiceGrid()
         DgvInvoiceLines.Columns.Clear()
         DgvInvoiceLines.AutoGenerateColumns = False
+        '      DgvInvoiceLines.AllowUserToAddRows = False
         Dim colProduct As New DataGridViewComboBoxColumn
         colProduct.Name = "Product"
         colProduct.HeaderText = "Product"
@@ -255,13 +310,27 @@ Public Class Create_Invoice
         DgvInvoiceLines.Columns.Add("Discount", "Discount")
         DgvInvoiceLines.Columns.Add("Subtotal", "Subtotal")
         DgvInvoiceLines.Columns.Add("VAT", "VAT")
-        DgvInvoiceLines.Columns.Add("Total_Amount", "Total_Amount")
+        DgvInvoiceLines.Columns.Add("Total", "Total")
 
 
         DgvInvoiceLines.AllowUserToAddRows = False
         DgvInvoiceLines.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         DgvInvoiceLines.SelectionMode = DataGridViewSelectionMode.FullRowSelect
     End Sub
+
+    Private Function safeDecimal(value As Object) As Decimal
+        If value Is Nothing OrElse IsDBNull(value) Then Return 0D
+
+        Dim s As String = value.ToString().Trim()
+        s = s.Replace("", "")
+        s = s.Replace("", "")
+
+        Dim result As Decimal
+        Decimal.TryParse(s, Globalization.NumberStyles.Any,
+        Globalization.CultureInfo.InvariantCulture, result)
+        Return result
+
+    End Function
     '======================
     ' SAVE BUTTON CODE
     '======================
@@ -278,25 +347,38 @@ Public Class Create_Invoice
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
 
+                For Each row As DataGridViewRow In DgvInvoiceLines.Rows
 
-                Using cmd As New OleDbCommand("INSERT INTO [Invoice_Details] ([Product_Name], [Subtotal],[Discount], [VAT], [Total_Amount],[Status]) VALUES (?,?,?,?,?,?)", conn)
+                    If row.IsNewRow Then Continue For
+                    If row.Cells("Product").Value Is Nothing Then Continue For
 
-                    cmd.Parameters.AddWithValue("?", "Product_Name")
-                    ' cmd.Parameters.AddWithValue("@Subtotal", txtInvoiceID.Text)
-                    ' cmd.Parameters.AddWithValue("@Product", ComboBox3.Text)
-                    cmd.Parameters.AddWithValue("?", txtSubtotal.Text)
-                    cmd.Parameters.AddWithValue("?", txtDiscount.Text)
-                    cmd.Parameters.AddWithValue("?", txtTax.Text)
-                    cmd.Parameters.AddWithValue("?", txtTotalAmount.Text)
-                    cmd.Parameters.AddWithValue("?", cmbStatus.Text)
-                    cmd.ExecuteNonQuery()
-                End Using
+                    Using cmd As New OleDbCommand("INSERT INTO Invoice_Details " &
+       " ([InvoiceID], [Product], [Quantity], [Subtotal], [Discount], [VAT], [Total], [Status]) " &
+        "VALUES (?,?,?,?,?,?,?,?)", conn)
+
+                        cmd.Parameters.AddWithValue("@p1", txtInvoiceID.Text.Trim())
+                        cmd.Parameters.AddWithValue("@p2", row.Cells("Product").Value.ToString())
+                        cmd.Parameters.AddWithValue("@p3", Val(row.Cells("Quantity").Value))
+                        cmd.Parameters.AddWithValue("@p4", Val(row.Cells("Subtotal").Value))
+                        cmd.Parameters.AddWithValue("@p5", Val(row.Cells("Discount").Value))
+                        cmd.Parameters.AddWithValue("@p6", Val(row.Cells("VAT").Value))
+                        cmd.Parameters.AddWithValue("@p7", Val(row.Cells("Total").Value))
+                        cmd.Parameters.AddWithValue("@p8", cmbStatus.Text.Trim())
+                        cmd.ExecuteNonQuery()
+                    End Using
+
+                Next
                 conn.Close()
                 UpdateTotals()
+                frmInvoiceManagement.LoadData()
             End Using
-            Cart.ShowDialog()
-            MessageBox.Show("Saved successful!")
-            frmInvoiceManagement.LoadData()
+            ' Cart.ShowDialog()
+            clearform()
+            MessageBox.Show("Invoice Saved successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+        Catch ex As OleDbException
+            MessageBox.Show("Database error" & ex.Message, "Database error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
         Catch ex As Exception
             MessageBox.Show(
         $"Failed to save:{Environment.NewLine}{ex}",
@@ -326,9 +408,15 @@ Public Class Create_Invoice
 
         'row.Cells("LineTotal").Value = gross
         ' row.Cells("VAT").Value = vat
-        row.Cells("Total_Amount").Value = txtTotalAmount.Text
+        row.Cells("Total").Value = txtTotalAmount.Text
+
+        txtSubtotal.Text = gross.ToString("0.00")
+        '    txtTax.Text = vatsum.ToString("0.00")
+        txtDiscount.Text = discountAmount.ToString("0.00")
+        txtTotalAmount.Text = totalWithVAT.ToString("0.00")
 
     End Sub
+    Dim qty As Integer = 0
     Private Sub DgvInvoice_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles DgvInvoiceLines.CellValueChanged
         If e.RowIndex < 0 Then Exit Sub
         Dim row = DgvInvoiceLines.Rows(e.RowIndex)
@@ -344,12 +432,12 @@ Public Class Create_Invoice
                 If price IsNot Nothing AndAlso Not IsDBNull(price) Then
                     Dim unitPrice As Decimal = Convert.ToDecimal(price)
                     row.Cells("Subtotal").Value = unitPrice
-                    row.Cells("Quantity").Value = 1
+                    row.Cells("Quantity").Value = TextBox2.Text
                 End If
                 CalculateRow(row)
                 UpdateTotals()
-                '  RecalculateInvoiceTotal()
-
+                RecalculateInvoiceTotal()
+                CalculateGrandTotals()
             End Using
         End If
     End Sub
@@ -394,9 +482,8 @@ Public Class Create_Invoice
     '    MessageBox.Show("Products refreshed from Manage Products.", "Updated", MessageBoxButtons.OK, MessageBoxIcon.Information)
     'End Sub
 
-    Private Sub dgvInvoiceLines_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvInvoiceLines.CellContentClick
 
-    End Sub
+
 
     Private Sub DgvInvoiceLines_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInvoiceLines.DataError
         e.ThrowException = False
@@ -421,7 +508,7 @@ Public Class Create_Invoice
 
         row.Cells("Subtotal").Value = Math.Round(subtotal, 2)
         row.Cells("VAT").Value = Math.Round(vat, 2)
-        row.Cells("Total_Amount").Value = Math.Round(totalWithVAT, 2)
+        row.Cells("Total").Value = Math.Round(totalWithVAT, 2)
 
 
     End Sub
@@ -502,7 +589,7 @@ Public Class Create_Invoice
         'If DiscountValue < 0 Then
         '    DiscountValue = 0D
         'End If
-
+        CalculateGrandTotals()
         UpdateTotals()
         'For Each row As DataGridViewRow In DgvInvoiceLines.Rows
         '    If row.IsNewRow Then Continue For row.Cells("Discount").Value = CDec(txtDiscount.Text)
@@ -511,4 +598,15 @@ Public Class Create_Invoice
 
     End Sub
 
+    Private Sub btnSendInvoice_Click(sender As Object, e As EventArgs) Handles btnSendInvoice.Click
+
+    End Sub
+
+    Private Sub DgvInvoiceLines_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvInvoiceLines.CellContentClick
+
+    End Sub
+
+    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+        CalculateGrandTotals()
+    End Sub
 End Class

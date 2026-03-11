@@ -23,6 +23,8 @@ Partial Class Order_Form
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.ComboBox4 = New System.Windows.Forms.ComboBox()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.TextBox6 = New System.Windows.Forms.TextBox()
@@ -65,8 +67,8 @@ Partial Class Order_Form
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.ComboBox4 = New System.Windows.Forms.ComboBox()
-        Me.Label19 = New System.Windows.Forms.Label()
+        Me.TextBox8 = New System.Windows.Forms.TextBox()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -93,6 +95,23 @@ Partial Class Order_Form
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(577, 123)
         Me.Panel1.TabIndex = 0
+        '
+        'ComboBox4
+        '
+        Me.ComboBox4.FormattingEnabled = True
+        Me.ComboBox4.Location = New System.Drawing.Point(379, 78)
+        Me.ComboBox4.Name = "ComboBox4"
+        Me.ComboBox4.Size = New System.Drawing.Size(141, 21)
+        Me.ComboBox4.TabIndex = 18
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(297, 81)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(47, 13)
+        Me.Label19.TabIndex = 19
+        Me.Label19.Text = "Product:"
         '
         'ComboBox1
         '
@@ -352,7 +371,7 @@ Partial Class Order_Form
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(5, 67)
+        Me.Label3.Location = New System.Drawing.Point(12, 50)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(62, 13)
         Me.Label3.TabIndex = 2
@@ -361,7 +380,7 @@ Partial Class Order_Form
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(5, 16)
+        Me.Label4.Location = New System.Drawing.Point(12, 16)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(65, 13)
         Me.Label4.TabIndex = 3
@@ -370,7 +389,7 @@ Partial Class Order_Form
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(5, 118)
+        Me.Label5.Location = New System.Drawing.Point(12, 118)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(122, 13)
         Me.Label5.TabIndex = 4
@@ -385,7 +404,7 @@ Partial Class Order_Form
         '
         'DateTimePicker1
         '
-        Me.DateTimePicker1.Location = New System.Drawing.Point(131, 64)
+        Me.DateTimePicker1.Location = New System.Drawing.Point(131, 46)
         Me.DateTimePicker1.Name = "DateTimePicker1"
         Me.DateTimePicker1.Size = New System.Drawing.Size(167, 20)
         Me.DateTimePicker1.TabIndex = 1
@@ -446,6 +465,8 @@ Partial Class Order_Form
         'Panel5
         '
         Me.Panel5.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.Panel5.Controls.Add(Me.Label20)
+        Me.Panel5.Controls.Add(Me.TextBox8)
         Me.Panel5.Controls.Add(Me.DateTimePicker2)
         Me.Panel5.Controls.Add(Me.DateTimePicker1)
         Me.Panel5.Controls.Add(Me.Label4)
@@ -472,22 +493,21 @@ Partial Class Order_Form
         Me.DataGridView1.Size = New System.Drawing.Size(579, 85)
         Me.DataGridView1.TabIndex = 17
         '
-        'ComboBox4
+        'TextBox8
         '
-        Me.ComboBox4.FormattingEnabled = True
-        Me.ComboBox4.Location = New System.Drawing.Point(379, 78)
-        Me.ComboBox4.Name = "ComboBox4"
-        Me.ComboBox4.Size = New System.Drawing.Size(141, 21)
-        Me.ComboBox4.TabIndex = 18
+        Me.TextBox8.Location = New System.Drawing.Point(131, 79)
+        Me.TextBox8.Name = "TextBox8"
+        Me.TextBox8.Size = New System.Drawing.Size(163, 20)
+        Me.TextBox8.TabIndex = 13
         '
-        'Label19
+        'Label20
         '
-        Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(297, 81)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(47, 13)
-        Me.Label19.TabIndex = 19
-        Me.Label19.Text = "Product:"
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(12, 84)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(40, 13)
+        Me.Label20.TabIndex = 14
+        Me.Label20.Text = "Status:"
         '
         'Order_Form
         '
@@ -561,4 +581,6 @@ Partial Class Order_Form
     Friend WithEvents Label8 As Label
     Friend WithEvents ComboBox4 As ComboBox
     Friend WithEvents Label19 As Label
+    Friend WithEvents Label20 As Label
+    Friend WithEvents TextBox8 As TextBox
 End Class

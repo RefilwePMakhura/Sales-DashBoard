@@ -104,7 +104,16 @@ Public Class Sales_Order
 
     End Sub
 
+    Private Sub dgvInvoiceLines_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DataGridView1.CellBeginEdit
+        Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
 
+        If row.Cells("IsInvoiced").Value?.ToString() = "Yes" Then
+            MessageBox.Show("This Sales order has already been invoiced and cannot br edited",
+                            "Editing Locked",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            e.Cancel = True
+        End If
+    End Sub
     Private Sub LoadData()
 
         Try
@@ -161,24 +170,31 @@ Public Class Sales_Order
             'Dim Invoice As New Create_Invoice
             'If Not String.IsNullOrWhiteSpace(SelectedProduct) Then
 
-            'Create_Invoice.SetupInvoiceGrid()
+            Create_Invoice.SetupInvoiceGrid()
 
             For Each row As DataGridViewRow In DataGridView1.Rows
-                    If row.IsNewRow Then Continue For
-                    'If GoToCreate_Invoice = DialogResult.Yes Then
-                    Dim invoiceForm As New Create_Invoice
-                    invoiceForm.ComboBox3.Text = ComboBox2.Text
-                    ' invoiceForm.InvoiceID = newInvoiceID
-                    invoiceForm.SelectedProduct = row.Cells("Product").Value.ToString()
-                    invoiceForm.SelectedQuantity = row.Cells("Quantity").Value.ToString()
-                    invoiceForm.SelectedDiscount = row.Cells("Discount").Value.ToString()
-                    invoiceForm.SelectedSubtotal = row.Cells("Amount").Value.ToString()
-                    invoiceForm.SelectedTotal = row.Cells("Total").Value.ToString()
-                    invoiceForm.SelectedVAT = row.Cells("VAT").Value.ToString()
+                If row.IsNewRow Then Continue For
+                'If GoToCreate_Invoice = DialogResult.Yes Then
+                Dim invoiceForm As New Create_Invoice
+                invoiceForm.ComboBox3.Text = ComboBox2.Text
+                '  invoiceForm.invoiceid = newInvoiceID
+                invoiceForm.SelectedProduct = row.Cells("Product").Value.ToString()
+                invoiceForm.SelectedQuantity = CInt(row.Cells("Quantity").Value)
+                invoiceForm.SelectedDiscount = 0D
+                invoiceForm.SelectedSubtotal = CInt(row.Cells("Amount").Value)
+                invoiceForm.SelectedTotal = CInt(row.Cells("Total").Value)
+                invoiceForm.SelectedVAT = CInt(row.Cells("VAT").Value)
 
-                    invoiceForm.ShowDialog()
-                    'End If
-                Next
+
+                invoiceForm.txtDiscount.Text = TextBox6.Text
+                invoiceForm.txtSubtotal.Text = TextBox5.Text
+                invoiceForm.txtTotalAmount.Text = TextBox4.Text
+                invoiceForm.txtTax.Text = TextBox8.Text
+
+
+                invoiceForm.ShowDialog()
+                '  End If
+            Next
 
 
 
@@ -224,7 +240,22 @@ Public Class Sales_Order
 
         ' DataGridView1.Rows.Clear()
     End Sub
+    Private Sub PromptInvoice(OrderID As String)
 
+        Dim Results As DialogResult = MessageBox.Show(
+            $"Sale Order has been succefully saved." & vbCrLf &
+            $"Do you want to view the invoice for this order?",
+            "View Invoice?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+        If Results = DialogResult.Yes Then
+
+
+
+
+
+
+        End If
+    End Sub
     Public Sub ShowStack()
         Dim st As New StackTrace(True)
         MessageBox.Show(st.ToString)
