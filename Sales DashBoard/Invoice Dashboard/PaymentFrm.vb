@@ -139,65 +139,57 @@ Public Class PaymentFrm
 
 
 
-            Dim getcmd As New OleDbCommand(
-                "SELECT Total_Amount FROM Invoice_Details WHERE Invoice_ID= ?", conn, trans)
+                Dim getcmd As New OleDbCommand(
+                    "SELECT Total_Amount FROM Invoice_Details WHERE InvoiceID= ?", conn, trans)
+                getcmd.Parameters.AddWithValue("@Total_Amount", txtTotalAmount)
+                getcmd.Parameters.AddWithValue("@InvoiceID", InvoiceNo)
 
-            getcmd.Parameters.AddWithValue("@Invoice_ID", InvoiceNo)
+                getcmd.ExecuteReader()
+                'dr.Read()
 
-            Dim dr = getcmd.ExecuteReader()
-            dr.Read()
+                Dim currentPaid As String = txtAmountPaid.Text
+                Dim currentBalance As String = txtTotalAmount.Text
+                'dr.Close()
 
-            Dim currentPaid As Decimal
-            Dim currentBalance As Decimal = CDec(dr("Total_Amount"))
-            dr.Close()
-
-            Dim newpaidTotal As Decimal = currentPaid + paymentAmount
-            Dim NewBalance As Decimal = currentBalance - paymentAmount
+                Dim newpaidTotal As String = currentPaid + paymentAmount
+                Dim NewBalance As String = currentBalance - paymentAmount
 
 
 
-            Dim newStatus As String
+                Dim newStatus As String
 
-            If NewBalance < 0 Then
-                NewBalance = 0
-                newStatus = "Paid"
-            Else
-                newStatus = "Partially Paid"
-            End If
+                If NewBalance < 0 Then
+                    NewBalance = 0
+                    newStatus = "Paid"
+                Else
+                    newStatus = "Partially Paid"
+                End If
 
 
                 'txtTotalAmount.Text = NewBalance
                 Dim updatecmd As New OleDbCommand(
                     "UPDATE Invoice_Details
                     SET Status = ?
-                    WHERE Invoice_ID =?", conn, trans)
+                    WHERE InvoiceID =?", conn, trans)
 
                 updatecmd.Parameters.AddWithValue("@Status", newStatus)
-            updatecmd.Parameters.AddWithValue("@Invoice_ID", InvoiceNo)
+                updatecmd.Parameters.AddWithValue("@InvoiceID", InvoiceNo)
                 ' updatecmd.Parameters.AddWithValue("@Total_Amount", NewBalance)
                 updatecmd.ExecuteNonQuery()
 
 
-                Dim cmd As New OleDbCommand("INSERT INTO [Payment] ([Invoice_Number], [Customer], [Total_Amount], [Payment_Method], [Amount_Paid],[Status])" & "VALUES (?,?,?,?,?,?)", conn, trans)
-                '   cmd.Parameters.AddWithValue("@Payment_Date", DateTimePicker1.Value.Date)
-                cmd.Parameters.AddWithValue("@Customer", txtChange.Text)
-            cmd.Parameters.AddWithValue("@Total_Amount", txtTotalAmount.Text)
-            cmd.Parameters.AddWithValue("@Payment_Method", cmbPaymentMethod.Text)
-            cmd.Parameters.AddWithValue("@Amount_Paid", txtAmountPaid.Text)
-                cmd.Parameters.AddWithValue("@Status", TextBox1.Text)
-                cmd.Parameters.AddWithValue("@Invoice_Number", txtInvoiceNo.Text)
-            cmd.ExecuteNonQuery()
-
-
-                '    Dim cmd As New OleDbCommand("UPDATE Invoice_Details SET Total_Amount =?, Status =? WHERE Invoice_ID =?", conn, trans)
-                'cmd.Parameters.AddWithValue("@BankName", NewBalance)
-                'cmd.Parameters.AddWithValue("@ClosingBalance", newStatus)
-                'cmd.Parameters.AddWithValue("@Reference", GenerateInvoiceID)
-                'cmd.ExecuteNonQuery()
+                Dim cmd As New OleDbCommand("INSERT INTO [Payment] ([InvoiceID], [Total_Amount], [Payment_Method], [Amount_Paid], [Status])" & "VALUES (?,?,?,?,?)", conn, trans)
+                cmd.Parameters.AddWithValue("InvoiceID", txtInvoiceNo.Text)
+                cmd.Parameters.AddWithValue("Total_Amount", txtTotalAmount.Text)
+                cmd.Parameters.AddWithValue("Payment_Method", cmbPaymentMethod.Text)
+                cmd.Parameters.AddWithValue("Amount_Paid", txtAmountPaid.Text)
+                cmd.Parameters.AddWithValue("Status", newStatus)
+                cmd.ExecuteNonQuery()
 
 
 
-                Using cmdStock As New OleDbCommand("UPDATE [BankAccount] SET ClosingBalance = IIf(ClosingBalance Is Null, 0, ClosingBalance) + ? WHERE [BankName]", conn, trans)
+
+                Using cmdStock As New OleDbCommand("UPDATE [BankAccount] SET ClosingBalance = IIf(ClosingBalance Is Null, 0, ClosingBalance) + ? WHERE BankName = ?", conn, trans)
 
                     cmdStock.Parameters.AddWithValue("ClosingBalance", OleDbType.Integer).Value = txtAmountPaid.Text
                     cmdStock.Parameters.AddWithValue("BankName", OleDbType.VarChar).Value = ComboBox1.Text
@@ -205,27 +197,32 @@ Public Class PaymentFrm
                 End Using
 
                 trans.Commit()
-            MessageBox.Show("Payment Saved Successfully")
-            conn.Close()
-            UpdateInvoiceAsPaid()
-            frmInvoiceManagement.UpdateInvoiceStatus()
-            BankAccounts.ShowDialog()
+                MessageBox.Show("Payment Saved Successfully")
+                conn.Close()
+                UpdateInvoiceAsPaid()
+                frmInvoiceManagement.UpdateInvoiceStatus()
+                BankAccounts.ShowDialog()
                 BankAccounts.LoadBankAccount()
 
                 If Application.OpenForms().OfType(Of Order_Form).Any Then
                     Dim frm As Order_Form = Application.OpenForms().OfType(Of Order_Form).First
 
-                    frm.LoadOrderData()
+                    'frm.LoadOrderData()
                     frm.ColorGrid()
                 End If
 
             Catch ex As Exception
-            ' trans.Rollback()
-            MessageBox.Show("Error saving payement:" & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                'MessageBox.Show("Stack Trace:", ex.StackTrace)
+                'ShowStack()
+                '' trans.Rollback()
+                MessageBox.Show("Error saving payment:" & ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                '  MessageBox.Show("Stack Trace:", ex.StackTrace)
             End Try
         End Using
 
+    End Sub
+    Private Sub ShowStack()
+        Dim st As New StackTrace(True)
+        MessageBox.Show(st.ToString)
     End Sub
     Private Sub SavePayment()
 
@@ -316,3 +313,4 @@ Public Class PaymentFrm
 
     End Sub
 End Class
+

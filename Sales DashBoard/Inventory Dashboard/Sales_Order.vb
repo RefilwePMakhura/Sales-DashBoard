@@ -185,7 +185,7 @@ Public Class Sales_Order
                 invoiceForm.SelectedTotal = CInt(row.Cells("Total").Value)
                 invoiceForm.SelectedVAT = CInt(row.Cells("VAT").Value)
 
-
+                invoiceForm.TextBox2.Text = TextBox9.Text
                 invoiceForm.txtDiscount.Text = TextBox6.Text
                 invoiceForm.txtSubtotal.Text = TextBox5.Text
                 invoiceForm.txtTotalAmount.Text = TextBox4.Text
@@ -270,52 +270,7 @@ Public Class Sales_Order
         TextBox4.Clear()
         TextBox9.Clear()
     End Sub
-    'Private Sub UpdateStockAfterPurchase()
-    '    Using conn As New OleDbConnection(ConnectionString)
-    '        conn.Open()
 
-    '        For Each row As DataGridViewRow In DataGridView1.Rows
-    '            If row.IsNewRow Then Continue For
-
-    '            Dim ProductName As String = row.Cells("Product").Value.ToString()
-    '            Dim QuantityPurchased As Integer = Convert.ToInt32(row.Cells("Quantity").Value)
-
-    '            Using cmd As New OleDbCommand(
-    '            "UPDATE Product_Details
-    '            SET Current_Stock = Current_Stock - ?
-    '           WHERE Product_Name = ?", conn)
-
-    '                cmd.Parameters.Add("@Current_Stock", OleDbType.Integer).Value = QuantityPurchased
-    '                cmd.Parameters.Add("@Product", OleDbType.VarWChar).Value = ProductName
-
-    '                cmd.ExecuteNonQuery()
-    '            End Using
-    '        Next
-    '    End Using
-    'End Sub
-    'Private Sub UpdateTotals()
-    '    Dim subtotal As Decimal = 0D
-    '    Dim discountRate As Decimal = 0D
-    '    Dim vatRate As Decimal = 0.15D        ' 15% VAT
-
-    '    ' --- Step 1: Calculate subtotal from all invoice lines ---
-    '    For Each row As DataGridViewRow In DataGridView1.Rows
-    '        If row.IsNewRow Then Continue For
-    '        Dim linetotal As Decimal = 0D
-    '        Decimal.TryParse(Convert.ToString(row.Cells("LineTotal").Value), linetotal)
-    '        subtotal += linetotal
-    '    Next
-
-    '    Decimal.TryParse(TextBox6.Text, discountRate)
-    '    Dim tax = subtotal * vatRate
-    '    Dim total = subtotal + tax - discountRate
-    '    If total < 0 Then total = 0D
-
-    '    TextBox5.Text = subtotal.ToString("N2")
-    '    TextBox6.Text = discountRate.ToString()
-    '    TextBox8.Text = tax.ToString("N2")
-    '    TextBox4.Text = total.ToString("N2")
-    'End Sub
     Private Sub TextBox6_TextChanged(sender As Object, e As EventArgs) Handles TextBox6.TextChanged
         'Dim DiscountValue As Decimal = 0D
 

@@ -1,4 +1,5 @@
-﻿Imports System
+﻿
+Imports System
 Imports System.IO
 Imports System.Globalization
 Imports System.Collections.Generic
@@ -167,9 +168,9 @@ Public Class frmInvoiceManagement
 
             Dim PaymentFrm As New PaymentFrm
 
-            PaymentFrm.txtInvoiceNo.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Invoice_ID").Value.ToString
+            PaymentFrm.txtInvoiceNo.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("InvoiceID").Value.ToString
             PaymentFrm.TextBox1.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Status").Value.ToString
-            PaymentFrm.txtTotalAmount.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Total_Amount").Value.ToString
+            PaymentFrm.txtTotalAmount.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Total").Value.ToString
             Dim refence As String = Module1.Generaterefence
             PaymentFrm.TextBox2.Text = refence
 

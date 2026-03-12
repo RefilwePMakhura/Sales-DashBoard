@@ -64,6 +64,18 @@ Namespace My
                 Return CType(Me("Rama_s_IT_CentreConnectionString"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("refilwemakhura12@gmail.com")>  _
+        Public Property UserName() As String
+            Get
+                Return CType(Me("UserName"),String)
+            End Get
+            Set
+                Me("UserName") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

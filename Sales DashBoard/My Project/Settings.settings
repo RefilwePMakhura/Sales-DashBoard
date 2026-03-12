@@ -10,5 +10,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Provider=Microsoft.ACE.OLEDB.12.0;Data Source="|DataDirectory|\Rama's IT Centre.accdb"</Value>
     </Setting>
+    <Setting Name="UserName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">refilwemakhura12@gmail.com</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

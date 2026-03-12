@@ -32,7 +32,7 @@ Public Class Order_Form
         DataGridView1.Columns.Add("LineTotal", "LineTotal")
         DataGridView1.Columns.Add("Total", "Total")
     End Sub
-    Public Sub LoadOrderData()
+    Private Sub LoadOrderData()
 
         Try
             Using conn As New OleDbConnection(ConnectionString)
@@ -53,16 +53,28 @@ Public Class Order_Form
         ComboBox3.Items.AddRange(New String() {"Pickup", "Supplier Delivery", "Courier"})
         ComboBox3.SelectedIndex = 0
         LoadCompanyInfo()
-        SetUpOrderGrid()
+
+        LoadOrderData()
         LoadSuppliers()
         ClearForm()
         ReloadCustomersCombo()
         UpdateStockAfterPurchase()
         ColorGrid()
+        UpdateTotals()
         LoadProductToCombBox()
     End Sub
 
-
+    Private Function GetProducts() As DataTable
+        Dim dt As New DataTable
+        Using conn As New OleDbConnection(ConnectionString)
+            conn.Open()
+            Dim sql As String = "SELECT [Product_Name], [Unit_Price] FROM [Product_Details] ORDER BY [Product_Name]"
+            Using da As New OleDbDataAdapter(sql, conn)
+                da.Fill(dt)
+            End Using
+        End Using
+        Return dt
+    End Function
     Private Sub LoadCompanyInfo()
         Using conn As New OleDb.OleDbConnection(ConnectionString)
             conn.Open()
@@ -207,48 +219,48 @@ Public Class Order_Form
         If e.RowIndex < 0 Then Exit Sub
         Dim pay As New Payable
 
-        pay.selectedsupplier = DataGridView1.Rows(e.RowIndex).Cells("POID").Value.ToString()
+        pay.SelectedSupplierID = DataGridView1.Rows(e.RowIndex).Cells("POID").Value.ToString()
         pay.selectedCustomer = DataGridView1.Rows(e.RowIndex).Cells("Supplier").Value.ToString()
-        pay.selectedVAT = DataGridView1.Rows(e.RowIndex).Cells("VAT").Value.ToString()
+        pay.SelectedTax = DataGridView1.Rows(e.RowIndex).Cells("VAT").Value.ToString()
         pay.selectedQty = DataGridView1.Rows(e.RowIndex).Cells("Quantity").Value.ToString()
-        pay.selectedDate = DataGridView1.Rows(e.RowIndex).Cells("PODate").Value.ToString()
+        ' pay.selectedDate = DataGridView1.Rows(e.RowIndex).Cells("PODate").Value.ToString()
         pay.InvoiceAmount = DataGridView1.Rows(e.RowIndex).Cells("Total").Value.ToString()
         pay.ShowDialog()
     End Sub
-    Private Function CalculateDelivery(Subtotal As Decimal) As Decimal
-        If Subtotal > 3000D Then
-            Return 150D
-        Else
-            Return 0D
-        End If
-    End Function
-    Private Sub CalculateRow(row As DataGridViewRow)
-        If row Is Nothing OrElse row.IsNewRow Then Exit Sub
+    'Private Function CalculateDelivery(Subtotal As Decimal) As Decimal
+    '    If Subtotal > 3000D Then
+    '        Return 150D
+    '    Else
+    '        Return 0D
+    '    End If
+    'End Function
+    'Private Sub CalculateRow(row As DataGridViewRow)
+    '    If row Is Nothing OrElse row.IsNewRow Then Exit Sub
 
-        Dim qty As Integer = 0
-        Dim unitPrice As Decimal = 0D
-        Dim discountPercent As Decimal = 0D
+    '    Dim qty As Integer = 0
+    '    Dim unitPrice As Decimal = 0D
+    '    Dim discountPercent As Decimal = 0D
 
-        Integer.TryParse(row.Cells("Quantity").Value?.ToString(), qty)
-        Decimal.TryParse(row.Cells("Amount").Value?.ToString(), unitPrice)
-        Decimal.TryParse(row.Cells("Delivery").Value?.ToString(), discountPercent)
+    '    Integer.TryParse(row.Cells("Quantity").Value?.ToString(), qty)
+    '    Decimal.TryParse(row.Cells("Amount").Value?.ToString(), unitPrice)
+    '    Decimal.TryParse(row.Cells("Delivery").Value?.ToString(), discountPercent)
 
-        Dim gross As Decimal = qty * unitPrice
-        ' Dim discountAmount As Decimal = gross + discountPercent
-        Dim subtotal As Decimal = gross
-        Dim vat As Decimal = subtotal * 0.15D
-        Dim totalWithVAT As Decimal = subtotal + vat - discountPercent
+    '    Dim gross As Decimal = qty * unitPrice
+    '    ' Dim discountAmount As Decimal = gross + discountPercent
+    '    Dim subtotal As Decimal = gross
+    '    Dim vat As Decimal = subtotal * 0.15D
+    '    Dim totalWithVAT As Decimal = subtotal + vat - discountPercent
 
-        row.Cells("LineTotal").Value = Math.Round(subtotal, 2)
-        row.Cells("VAT").Value = Math.Round(vat, 2)
-        row.Cells("Total").Value = Math.Round(totalWithVAT, 2)
+    '    row.Cells("LineTotal").Value = Math.Round(subtotal, 2)
+    '    row.Cells("VAT").Value = Math.Round(vat, 2)
+    '    row.Cells("Total").Value = Math.Round(totalWithVAT, 2)
 
-        TextBox7.Text = subtotal.ToString("N2")
-        TextBox5.Text = discountPercent.ToString()
-        TextBox9.Text = vat.ToString("N2")
-        TextBox10.Text = totalWithVAT.ToString("N2")
+    '    TextBox7.Text = subtotal.ToString("N2")
+    '    TextBox5.Text = discountPercent.ToString()
+    '    TextBox9.Text = vat.ToString("N2")
+    '    TextBox10.Text = totalWithVAT.ToString("N2")
 
-    End Sub
+    '  End Sub
 
     Private Sub dgvOrderRecords_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellEndEdit
         If e.RowIndex > 0 Then
@@ -303,7 +315,7 @@ Public Class Order_Form
                 If Price IsNot Nothing Then
                     row.Cells("Amount").Value = Convert.ToDecimal(Price)
                     row.Cells("Quantity").Value = 1
-                    CalculateRow(row)
+                    '  CalculateRow(row)
                     'CalculateGrandTotal()
                 End If
             End Using
@@ -312,29 +324,18 @@ Public Class Order_Form
     End Sub
     Private Sub UpdateTotals()
 
-        Dim subtotal As Decimal = 0D
-        Dim vatTotal As Decimal = 0D
-        Dim grandTotal As Decimal = 0D
+        Dim qty, vatTotal, discount As Decimal
 
-        For Each row As DataGridViewRow In DataGridView1.Rows
-            If row.IsNewRow Then Continue For
+        Decimal.TryParse(TextBox11.Text, qty)
+        Decimal.TryParse(TextBox9.Text, vatTotal)
+        Decimal.TryParse(TextBox5.Text, discount)
+        Dim total = qty * Subtotal
 
-            Dim lineSubtotal As Decimal = 0D
-            Dim lineVAT As Decimal = 0D
-            Dim lineTotal As Decimal = 0D
+        total -= total * (discount / 100D)
+        vatTotal = total * 0.15D
+        TextBox10.Text = total.ToString("0.00")
+        TextBox9.Text = vatTotal.ToString("0.00")
 
-            Decimal.TryParse(Convert.ToString(row.Cells("LineTotal").Value), lineSubtotal)
-            Decimal.TryParse(Convert.ToString(row.Cells("VAT").Value), lineVAT)
-            Decimal.TryParse(Convert.ToString(row.Cells("Total").Value), lineTotal)
-
-            subtotal += lineSubtotal
-            vatTotal += lineVAT
-            grandTotal += lineTotal
-        Next
-
-        TextBox7.Text = subtotal.ToString("N2")
-        TextBox9.Text = vatTotal.ToString("N2")
-        TextBox10.Text = grandTotal.ToString("N2")
 
     End Sub
     Public Sub ColorGrid()
@@ -408,19 +409,17 @@ Public Class Order_Form
 
                     Using cmd As New OleDbCommand("
                     INSERT INTO [Order] 
-                    ([PO_ID],[Product],[Delivery],[Quantity],[Amount],[LineTotal],[VAT],[Total],[Status]) 
-                    VALUES (?,?,?,?,?,?,?,?,?)", conn)
+                    ([PO_ID], [Product], [Quantity], [Amount], [Delivery], [VAT], [Total], [Status]) 
+                    VALUES (?,?,?,?,?,?,?,?)", conn)
 
                         cmd.Parameters.AddWithValue("?", poID)
                         cmd.Parameters.AddWithValue("?", row.Cells("Product").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Delivery").Value)
                         cmd.Parameters.AddWithValue("?", row.Cells("Quantity").Value)
                         cmd.Parameters.AddWithValue("?", row.Cells("Amount").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("LineTotal").Value)
+                        cmd.Parameters.AddWithValue("?", row.Cells("Delivery").Value)
                         cmd.Parameters.AddWithValue("?", row.Cells("VAT").Value)
                         cmd.Parameters.AddWithValue("?", row.Cells("Total").Value)
                         cmd.Parameters.AddWithValue("?", row.Cells("Status").Value)
-
                         cmd.ExecuteNonQuery()
                     End Using
                 Next
@@ -460,18 +459,56 @@ Public Class Order_Form
     Private Sub TextBox5_TextChanged(sender As Object, e As EventArgs) Handles TextBox5.TextChanged
         UpdateTotals()
 
-        For Each row As DataGridViewRow In DataGridView1.Rows
-            If row.IsNewRow Then Continue For row.Cells("Delivery").Value = CDec(TextBox5.Text)
-            RecalculateRow(row.Index)
-        Next
+        'For Each row As DataGridViewRow In DataGridView1.Rows
+        '    If row.IsNewRow Then Continue For row.Cells("Delivery").Value = CDec(TextBox5.Text)
+        '    RecalculateRow(row.Index)
+        'Next
     End Sub
-    Private Sub RecalculateRow(rowIndex As Integer)
+    'Private Sub RecalculateRow(rowIndex As Integer)
 
-        If rowIndex < 0 Then Exit Sub
+    '    If rowIndex < 0 Then Exit Sub
 
-        Dim row As DataGridViewRow = DataGridView1.Rows(rowIndex)
-        CalculateRow(row)
+    '    Dim row As DataGridViewRow = DataGridView1.Rows(rowIndex)
+    '    CalculateRow(row)
+    '    UpdateTotals()
+
+    'End Sub
+
+    Private Sub ComboBox4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox4.SelectedIndexChanged
+        Dim selectedProduct As String = ComboBox4.Text.Trim()
+        If selectedProduct = "" Then Exit Sub
         UpdateTotals()
+        Try
+            Using conn As New OleDbConnection(ConnectionString)
+                conn.Open()
 
+                Dim sql As String =
+                    "SELECT Unit_Price FROM Product_Details WHERE Product_Name = ?"
+
+                Using cmd As New OleDbCommand(sql, conn)
+                    cmd.Parameters.Add("?", OleDbType.VarWChar).Value = selectedProduct
+
+                    Dim result = cmd.ExecuteScalar()
+
+                    If result IsNot Nothing AndAlso Not IsDBNull(result) Then
+                        TextBox7.Text = CDec(result).ToString("F2")
+                    Else
+                        TextBox7.Text = "0.00"
+                    End If
+
+                End Using
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("Error loading unit price: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub TextBox10_TextChanged(sender As Object, e As EventArgs) Handles TextBox10.TextChanged
+
+    End Sub
+
+    Private Sub TextBox11_TextChanged(sender As Object, e As EventArgs) Handles TextBox11.TextChanged
+        UpdateTotals()
     End Sub
 End Class

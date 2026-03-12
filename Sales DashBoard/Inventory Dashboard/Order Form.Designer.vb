@@ -65,10 +65,12 @@ Partial Class Order_Form
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.TextBox8 = New System.Windows.Forms.TextBox()
         Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.TextBox8 = New System.Windows.Forms.TextBox()
-        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -182,6 +184,8 @@ Partial Class Order_Form
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.Panel2.Controls.Add(Me.TextBox11)
+        Me.Panel2.Controls.Add(Me.Label21)
         Me.Panel2.Controls.Add(Me.TextBox5)
         Me.Panel2.Controls.Add(Me.Label8)
         Me.Panel2.Controls.Add(Me.ComboBox3)
@@ -203,7 +207,7 @@ Partial Class Order_Form
         '
         'TextBox5
         '
-        Me.TextBox5.Location = New System.Drawing.Point(455, 39)
+        Me.TextBox5.Location = New System.Drawing.Point(455, 59)
         Me.TextBox5.Name = "TextBox5"
         Me.TextBox5.Size = New System.Drawing.Size(100, 20)
         Me.TextBox5.TabIndex = 31
@@ -211,7 +215,7 @@ Partial Class Order_Form
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(382, 41)
+        Me.Label8.Location = New System.Drawing.Point(377, 61)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(48, 13)
         Me.Label8.TabIndex = 30
@@ -261,7 +265,7 @@ Partial Class Order_Form
         '
         'TextBox10
         '
-        Me.TextBox10.Location = New System.Drawing.Point(455, 103)
+        Me.TextBox10.Location = New System.Drawing.Point(455, 111)
         Me.TextBox10.Name = "TextBox10"
         Me.TextBox10.Size = New System.Drawing.Size(100, 20)
         Me.TextBox10.TabIndex = 7
@@ -275,7 +279,7 @@ Partial Class Order_Form
         '
         'TextBox9
         '
-        Me.TextBox9.Location = New System.Drawing.Point(455, 71)
+        Me.TextBox9.Location = New System.Drawing.Point(455, 85)
         Me.TextBox9.Name = "TextBox9"
         Me.TextBox9.Size = New System.Drawing.Size(100, 20)
         Me.TextBox9.TabIndex = 6
@@ -292,7 +296,7 @@ Partial Class Order_Form
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(382, 75)
+        Me.Label9.Location = New System.Drawing.Point(377, 88)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(28, 13)
         Me.Label9.TabIndex = 8
@@ -301,7 +305,7 @@ Partial Class Order_Form
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(382, 7)
+        Me.Label10.Location = New System.Drawing.Point(377, 7)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(49, 13)
         Me.Label10.TabIndex = 9
@@ -310,7 +314,7 @@ Partial Class Order_Form
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(382, 109)
+        Me.Label11.Location = New System.Drawing.Point(377, 115)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(61, 13)
         Me.Label11.TabIndex = 10
@@ -478,6 +482,22 @@ Partial Class Order_Form
         Me.Panel5.Size = New System.Drawing.Size(303, 147)
         Me.Panel5.TabIndex = 0
         '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(12, 84)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(40, 13)
+        Me.Label20.TabIndex = 14
+        Me.Label20.Text = "Status:"
+        '
+        'TextBox8
+        '
+        Me.TextBox8.Location = New System.Drawing.Point(131, 79)
+        Me.TextBox8.Name = "TextBox8"
+        Me.TextBox8.Size = New System.Drawing.Size(163, 20)
+        Me.TextBox8.TabIndex = 13
+        '
         'DateTimePicker2
         '
         Me.DateTimePicker2.Location = New System.Drawing.Point(131, 112)
@@ -493,21 +513,21 @@ Partial Class Order_Form
         Me.DataGridView1.Size = New System.Drawing.Size(579, 85)
         Me.DataGridView1.TabIndex = 17
         '
-        'TextBox8
+        'Label21
         '
-        Me.TextBox8.Location = New System.Drawing.Point(131, 79)
-        Me.TextBox8.Name = "TextBox8"
-        Me.TextBox8.Size = New System.Drawing.Size(163, 20)
-        Me.TextBox8.TabIndex = 13
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(377, 34)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(49, 13)
+        Me.Label21.TabIndex = 32
+        Me.Label21.Text = "Quantity:"
         '
-        'Label20
+        'TextBox11
         '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(12, 84)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(40, 13)
-        Me.Label20.TabIndex = 14
-        Me.Label20.Text = "Status:"
+        Me.TextBox11.Location = New System.Drawing.Point(455, 33)
+        Me.TextBox11.Name = "TextBox11"
+        Me.TextBox11.Size = New System.Drawing.Size(100, 20)
+        Me.TextBox11.TabIndex = 33
         '
         'Order_Form
         '
@@ -583,4 +603,6 @@ Partial Class Order_Form
     Friend WithEvents Label19 As Label
     Friend WithEvents Label20 As Label
     Friend WithEvents TextBox8 As TextBox
+    Friend WithEvents TextBox11 As TextBox
+    Friend WithEvents Label21 As Label
 End Class

@@ -107,9 +107,10 @@ Public Class Create_Invoice
                 .Cells("Product").Value = SelectedProduct
                 .Cells("Quantity").Value = SelectedQuantity
                 .Cells("Subtotal").Value = SelectedSubtotal
-                .Cells("Discount").Value = SelectedDiscount
+                .Cells("Discount").Value = Sales_Order.TextBox6.Text.ToString()
                 .Cells("VAT").Value = SelectedVAT
                 .Cells("Total").Value = SelectedTotal
+                CalculateGrandTotals()
             End With
         End If
         Try
@@ -140,7 +141,7 @@ Public Class Create_Invoice
         Dim vatsum As Decimal = 0D
         Dim discountsum As Decimal = 0D
         Dim totalsum As Decimal = 0D
-        Dim qtytotal As Integer = 0
+        Dim qtytotal As Integer
         For Each row As DataGridViewRow In DgvInvoiceLines.Rows
             If row.IsNewRow Then Continue For
 
@@ -187,6 +188,7 @@ Public Class Create_Invoice
         '    RemoveHandler combo.SelectedIndexChanged, AddressOf ProductCombo_SelectedIndexChanged
         '    AddHandler combo.SelectedIndexChanged, AddressOf ProductCombo_SelectedIndexChanged
         'End If
+        '   My.Settings.UserName =
     End Sub
 
     Private Sub DataGridView1_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvInvoiceLines.CellEndEdit
@@ -358,12 +360,13 @@ Public Class Create_Invoice
 
                         cmd.Parameters.AddWithValue("@p1", txtInvoiceID.Text.Trim())
                         cmd.Parameters.AddWithValue("@p2", row.Cells("Product").Value.ToString())
-                        cmd.Parameters.AddWithValue("@p3", Val(row.Cells("Quantity").Value))
-                        cmd.Parameters.AddWithValue("@p4", Val(row.Cells("Subtotal").Value))
-                        cmd.Parameters.AddWithValue("@p5", Val(row.Cells("Discount").Value))
+                        cmd.Parameters.AddWithValue("@p3", row.Cells("Quantity").Value)
+                        cmd.Parameters.AddWithValue("@p4", row.Cells("Subtotal").Value)
+                        cmd.Parameters.AddWithValue("@p5", row.Cells("Discount").Value)
                         cmd.Parameters.AddWithValue("@p6", Val(row.Cells("VAT").Value))
                         cmd.Parameters.AddWithValue("@p7", Val(row.Cells("Total").Value))
                         cmd.Parameters.AddWithValue("@p8", cmbStatus.Text.Trim())
+                        '  cmd.Parameters.AddWithValue("@p9", DateTimePicker1.Value)
                         cmd.ExecuteNonQuery()
                     End Using
 
@@ -371,6 +374,7 @@ Public Class Create_Invoice
                 conn.Close()
                 UpdateTotals()
                 frmInvoiceManagement.LoadData()
+                frmInvoiceManagement.ShowDialog()
             End Using
             ' Cart.ShowDialog()
             clearform()
@@ -416,7 +420,7 @@ Public Class Create_Invoice
         txtTotalAmount.Text = totalWithVAT.ToString("0.00")
 
     End Sub
-    Dim qty As Integer = 0
+    Dim qty As Integer
     Private Sub DgvInvoice_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles DgvInvoiceLines.CellValueChanged
         If e.RowIndex < 0 Then Exit Sub
         Dim row = DgvInvoiceLines.Rows(e.RowIndex)
@@ -492,7 +496,7 @@ Public Class Create_Invoice
     Private Sub CalculateRow(row As DataGridViewRow)
         If row Is Nothing OrElse row.IsNewRow Then Exit Sub
 
-        Dim qty As Integer = 0
+        Dim qty As Integer
         Dim unitPrice As Decimal = 0D
         Dim discountPercent As Decimal = 0D
 

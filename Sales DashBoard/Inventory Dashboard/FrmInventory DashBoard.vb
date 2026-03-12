@@ -42,8 +42,14 @@ Convert.ToDecimal(cmd.ExecuteScalar()))
                 End Using
 
                 Using cmd As New OleDbCommand(
-                    "SELECT COUNT (*) FROM Product_Details WHERE Current_Stock < = Recorder_Level", conn)
-                    lblLowStockItems.Text = cmd.ExecuteScalar().ToString()
+                    "SELECT COUNT (*) FROM Product_Details WHERE Current_Stock <= Recorder_Level", conn)
+                    Dim result = cmd.ExecuteScalar()
+                    If result Is Nothing Then
+                        lblLowStockItems.Text = "0"
+                    Else
+                        lblLowStockItems.Text = result.ToString()
+                    End If
+
                 End Using
             End Using
 
