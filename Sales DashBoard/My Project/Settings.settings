@@ -13,5 +13,11 @@
     <Setting Name="UserName" Type="System.String" Scope="User">
       <Value Profile="(Default)">refilwemakhura12@gmail.com</Value>
     </Setting>
+    <Setting Name="SmptPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Smpt" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

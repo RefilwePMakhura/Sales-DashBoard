@@ -56,4 +56,24 @@ Public Class Settings
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadCompanyInfo()
     End Sub
+    'Private Sub SaveEmailSettings()
+    '    Try
+    '        SaveSetting("SmtpHost", If(TextBox8 IsNot Nothing, TextBox8.Text.Trim(), ""))
+    '        Dim portValue As Integer
+    '        If TextBox9 IsNot Nothing AndAlso Integer.TryParse(TextBox9.Text.Trim(), portValue) Then
+    '            SaveSetting("SmtpPort", portValue)
+    '        End If
+    '        SaveSetting("SmtpSslEnable", If(CheckBox1 IsNot Nothing AndAlso CheckBox1.Checked, True, False))
+    '        SaveSetting("SmtpFrom", If(TextBox6 IsNot Nothing, TextBox6.Text.Trim(), ""))
+    '        SaveSetting("SmtpAuth", If(CheckBox2 IsNot Nothing AndAlso CheckBox2.Checked, True, False))
+    '        SaveSetting("SmtpUsername", If(TextBox10 IsNot Nothing, TextBox10.Text.Trim(), ""))
+    '        SaveSettings("SmtpPassword", If(TextBox11 IsNot Nothing, TextBox11.Text, ""))
+    '    Catch
+    '    End Try
+    'End Sub
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        My.Settings.UserName = TextBox10.Text
+        ' My.Settings.Port = TextBox2.Text
+        My.Settings.Save()
+    End Sub
 End Class
