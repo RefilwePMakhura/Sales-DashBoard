@@ -10,64 +10,41 @@ Public Class FrmInventory_Dashboard
     Private amtLowStock As Integer = 0
     Dim zarCulture
 
-
-
-
-
     Public Sub LoadInventoryTotalsFromFile()
-
-        'amtStockValue = 0
-        'totalSKU = 0
-        'amtLowStock = 0
 
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
 
-                Using cmd As New OleDbCommand(
-               "SELECT SUM(Current_Stock) FROM [Product_Details]", conn)
-                    lblTotalSKUs.Text = If(IsDBNull(cmd.ExecuteScalar()), 0, cmd.ExecuteScalar()).ToString()
+                'Total SKUs
+                Using cmd As New OleDbCommand("SELECT COUNT(*) FROM Product_Details", conn)
+                    lblTotalSKUs.Text = cmd.ExecuteScalar().ToString()
                 End Using
 
-                Using cmd As New OleDbCommand(
-             "SELECT SUM(Current_Stock * Unit_Price) FROM [Product_Details]", conn)
+                'Total Stock Value
+                Using cmd As New OleDbCommand("SELECT SUM(Current_Stock * Unit_Price) FROM Product_Details", conn)
 
-                    Dim total As Decimal =
-                        If(IsDBNull(cmd.ExecuteScalar()),
-                        0D,
-Convert.ToDecimal(cmd.ExecuteScalar()))
-
-                    lblTotalStockValue.Text = total.ToString("c", zarCulture)
-
-                End Using
-
-                Using cmd As New OleDbCommand(
-                    "SELECT COUNT (*) FROM Product_Details WHERE Current_Stock <= Recorder_Level", conn)
                     Dim result = cmd.ExecuteScalar()
-                    If result Is Nothing Then
-                        lblLowStockItems.Text = "0"
-                    Else
-                        lblLowStockItems.Text = result.ToString()
-                    End If
+                    Dim total As Decimal = If(IsDBNull(result), 0D, Convert.ToDecimal(result))
+
+                    lblTotalStockValue.Text = total.ToString("C", zarCulture)
 
                 End Using
+
+                'Low Stock Items
+                Using cmd As New OleDbCommand("SELECT COUNT(*) FROM Product_Details WHERE Current_Stock <= Recorder_Level", conn)
+
+                    Dim result = cmd.ExecuteScalar()
+                    lblLowStockItems.Text = If(result Is Nothing, "0", result.ToString())
+
+                End Using
+
             End Using
 
-
-
         Catch ex As Exception
-            MessageBox.Show("Failed to load totals!" & ex.Message)
-            MessageBox.Show("Stack Trace:" & ex.StackTrace)
-            Debug.WriteLine(ex.ToString)
+            MessageBox.Show("Failed to load totals! " & ex.Message)
         End Try
 
-
-        'totalSKU += 0
-        'amtLowStock += 1
-        'amtStockValue += 0
-        'lblTotalStockValue.Text = amtStockValue.ToString()
-        'lblLowStockItems.Text = amtLowStock.ToString()
-        'lblTotalSKUs.Text = totalSKU.ToString()
     End Sub
     Public Sub ShowStack()
         Dim st As New StackTrace(True)
