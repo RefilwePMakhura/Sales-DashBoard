@@ -396,6 +396,7 @@ Partial Class FrmInventory_Dashboard
         Me.Controls.Add(Me.Panel1)
         Me.Name = "FrmInventory_Dashboard"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "inventory Dashboard"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.Panel1.ResumeLayout(False)

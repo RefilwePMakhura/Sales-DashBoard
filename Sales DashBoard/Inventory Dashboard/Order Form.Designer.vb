@@ -34,6 +34,8 @@ Partial Class Order_Form
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.TextBox11 = New System.Windows.Forms.TextBox()
+        Me.Label21 = New System.Windows.Forms.Label()
         Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.ComboBox3 = New System.Windows.Forms.ComboBox()
@@ -69,8 +71,6 @@ Partial Class Order_Form
         Me.TextBox8 = New System.Windows.Forms.TextBox()
         Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -204,6 +204,22 @@ Partial Class Order_Form
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(577, 136)
         Me.Panel2.TabIndex = 0
+        '
+        'TextBox11
+        '
+        Me.TextBox11.Location = New System.Drawing.Point(455, 33)
+        Me.TextBox11.Name = "TextBox11"
+        Me.TextBox11.Size = New System.Drawing.Size(100, 20)
+        Me.TextBox11.TabIndex = 33
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(377, 34)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(49, 13)
+        Me.Label21.TabIndex = 32
+        Me.Label21.Text = "Quantity:"
         '
         'TextBox5
         '
@@ -355,21 +371,21 @@ Partial Class Order_Form
         'Button3
         '
         Me.Button3.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Button3.Location = New System.Drawing.Point(294, 9)
+        Me.Button3.Location = New System.Drawing.Point(457, 10)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 20
-        Me.Button3.Text = "Save"
+        Me.Button3.Text = "Exit"
         Me.Button3.UseVisualStyleBackColor = False
         '
         'Button4
         '
         Me.Button4.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Button4.Location = New System.Drawing.Point(427, 10)
+        Me.Button4.Location = New System.Drawing.Point(302, 10)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(75, 23)
         Me.Button4.TabIndex = 21
-        Me.Button4.Text = "Exit"
+        Me.Button4.Text = "Save"
         Me.Button4.UseVisualStyleBackColor = False
         '
         'Label3
@@ -431,6 +447,7 @@ Partial Class Order_Form
         Me.PictureBox1.Location = New System.Drawing.Point(3, 42)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(126, 94)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 4
         Me.PictureBox1.TabStop = False
         '
@@ -513,22 +530,6 @@ Partial Class Order_Form
         Me.DataGridView1.Size = New System.Drawing.Size(579, 85)
         Me.DataGridView1.TabIndex = 17
         '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(377, 34)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(49, 13)
-        Me.Label21.TabIndex = 32
-        Me.Label21.Text = "Quantity:"
-        '
-        'TextBox11
-        '
-        Me.TextBox11.Location = New System.Drawing.Point(455, 33)
-        Me.TextBox11.Name = "TextBox11"
-        Me.TextBox11.Size = New System.Drawing.Size(100, 20)
-        Me.TextBox11.TabIndex = 33
-        '
         'Order_Form
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -541,6 +542,7 @@ Partial Class Order_Form
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "Order_Form"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Order_Form"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()

@@ -116,4 +116,12 @@ Public Class Bank_Dashboard
         LoadBankDashboard()
         LoadCurrencies()
     End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Bank_Transaction.ShowDialog()
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        BankAccounts.ShowDialog()
+    End Sub
 End Class

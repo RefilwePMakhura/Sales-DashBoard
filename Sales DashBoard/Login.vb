@@ -4,46 +4,98 @@ Imports System.Data.OleDb
 Public Class Login
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnLogin.Click
-        Dim UserName As String = txtUserName.Text
-        Dim Password As String = txtPassword.Text
 
+        Dim username As String = txtUserName.Text.Trim()
+        Dim password As String = txtPassword.Text.Trim()
 
-
-        If String.IsNullOrWhiteSpace(UserName) OrElse String.IsNullOrWhiteSpace(Password) Then
-
-            MessageBox.Show("Please enter both username and password.", "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
+        If username = "" Or password = "" Then
+            MessageBox.Show("Please enter username and password")
+            Exit Sub
         End If
 
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
 
-                Dim sql As String = "SELECT COUNT(*)FROM Login_Details WHERE User_Name = ? AND Password =?"
+                Dim sql As String =
+                "SELECT ID_Number, User_Name, First_Name, Role, IsActive
+                 FROM Login_Details 
+                 WHERE User_Name=? AND [Password]=?"
+
                 Using cmd As New OleDbCommand(sql, conn)
-                    cmd.Parameters.AddWithValue("@p1", UserName)
-                    cmd.Parameters.AddWithValue("@p2", Password)
-                    Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
-                    If count > 0 Then
-                        MessageBox.Show("Login successful!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-                        Dim Sales As New Form1()
-                        Form1.Show()
-                        '  Me.Hide()
+                    cmd.Parameters.Add("?", OleDbType.VarWChar).Value = username
+                    cmd.Parameters.Add("?", OleDbType.VarWChar).Value = password
+
+                    Dim dt As New DataTable()
+                    Dim da As New OleDbDataAdapter(cmd)
+                    da.Fill(dt)
+
+                    If dt.Rows.Count > 0 Then
+
+                        ' 🔒 Check if user is active
+                        Dim isActive As Boolean = Convert.ToBoolean(dt.Rows(0)("IsActive"))
+
+                        If isActive = False Then
+                            MessageBox.Show("Your account is deactivated. Contact admin.")
+                            Exit Sub
+                        End If
+
+                        ' ✅ Store session
+                        Session.CurrentUserID = Convert.ToInt32(dt.Rows(0)("ID_Number"))
+                        Session.CurrentUser = dt.Rows(0)("First_Name").ToString()
+                        Session.CurrentRole = dt.Rows(0)("Role").ToString()
+
+                        MessageBox.Show("Welcome " & Session.CurrentUser)
+
+                        Dim home As New Form1
+                        home.Show()
+                        Me.Hide()
+
                     Else
-                        MessageBox.Show("Invalid Credatials")
-                        txtPassword.Clear()
-                        txtUserName.Clear()
+                        MessageBox.Show("Invalid username or password")
                     End If
-                End Using
 
+                End Using
             End Using
+
         Catch ex As Exception
-            MessageBox.Show($"Error during login:{Environment.NewLine}{ex.Message}", "Login", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Login error: " & ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles btnSignUp.Click
+        Settings.ShowDialog()
+    End Sub
+
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Try
+            Dim filePath As String = "C:\Users\Refilwe\Documents\Screen Dump.docx"
+
+            If Not File.Exists(filePath) Then
+                MessageBox.Show("Guide file not found in Downloads." & vbCrLf & filePath,
+                                "Guide",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning)
+                Exit Sub
+            End If
+
+            Process.Start(filePath)
+
+        Catch ex As Exception
+            MessageBox.Show("Error opening guide: " & ex.Message,
+                            "Guide",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error)
         End Try
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnSignUp.Click
-        Register.ShowDialog()
-    End Sub
+
+
 End Class

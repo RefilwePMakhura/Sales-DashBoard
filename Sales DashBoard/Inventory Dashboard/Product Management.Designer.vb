@@ -322,6 +322,7 @@ Partial Class ProductMgtFrm
         Me.Controls.Add(Me.dgvRecords)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "ProductMgtFrm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Product_Management"
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvRecords, System.ComponentModel.ISupportInitialize).EndInit()

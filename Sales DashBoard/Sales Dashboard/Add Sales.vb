@@ -184,7 +184,35 @@ Public Class Add_Sales
         '    dtpSaleDate.Value = Convert.ToDateTime(dgvRecords.CurrentRow.Cells("Sale_Date").Value)
         'End If
     End Sub
+    Private Function GetCellString(row As DataGridViewRow, columnName As String) As String
+        If row Is Nothing Then Return ""
+        If row.DataGridView Is Nothing Then Return ""
+        If Not row.DataGridView.Columns.Contains(columnName) Then Return ""
 
+        Dim value = row.Cells(columnName).Value
+        If value Is Nothing OrElse IsDBNull(value) Then Return ""
+
+        Return value.ToString().Trim()
+    End Function
+
+    Private Function GetCellDate(row As DataGridViewRow, columnName As String) As Date
+        If row Is Nothing Then Return Date.Today
+        If row.DataGridView Is Nothing Then Return Date.Today
+        If Not row.DataGridView.Columns.Contains(columnName) Then Return Date.Today
+
+        Dim value = row.Cells(columnName).Value
+        If value Is Nothing OrElse IsDBNull(value) Then Return Date.Today
+
+        Dim dt As Date
+        If Date.TryParse(value.ToString(), dt) Then
+            Return dt
+        End If
+
+        Return Date.Today
+    End Function
+    'Private Sub ButtonSalesReport_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    '   
+    'End Sub
     ' -------------------------------
     ' LOAD PRODUCTS FROM DATABASE
     ' -------------------------------
@@ -368,8 +396,10 @@ Public Class Add_Sales
             txtUnitPrice.Text = row.Cells("Unit_Price").Value.ToString()
             cmbCustomer.Text = row.Cells("Customer").Value.ToString()
             txtTransactionNumber.Text = row.Cells("Transaction_Number").Value.ToString()
+            cboStage.Text = row.Cells("Product").Value.ToString
+            cboStage.Text = row.Cells("Total_Price").Value.ToString
             cboStage.Text = row.Cells("Stage").Value.ToString
-
+            cboStage.Text = row.Cells("Sale_Date").Value.ToString
         End If
 
 
@@ -521,7 +551,83 @@ Public Class Add_Sales
 
 
     End Sub
+    Private Sub OpenLeadReport()
 
+        If cmbCustomer.Text = "" Then
+            MessageBox.Show("Select a customer first")
+            Exit Sub
+        End If
+
+        Dim report As New Sales_Templete()
+
+        ' SALES DATA
+        report.Customer = cmbCustomer.Text
+        report.Product = cmbProduct.Text
+        report.Quantity = Val(txtQuantity.Text)
+        report.UnitPrice = Val(txtUnitPrice.Text)
+        report.TotalPrice = Val(TextBox1.Text)
+        report.Stage = cboStage.Text
+        report.Sale_Date = dtpSaleDate.Value
+
+        ' 🔥 AUTO GET EMAIL
+
+
+        ' report.ShowDialog()
+
+    End Sub
+    Private Function GetCustomerEmail(customerName As String) As String
+
+        Try
+            Using conn As New OleDbConnection(ConnectionString)
+                conn.Open()
+
+                Dim sql As String = "SELECT Email FROM [Customer_Details] WHERE Customer_Name=?"
+                Using cmd As New OleDbCommand(sql, conn)
+                    cmd.Parameters.AddWithValue("?", customerName)
+
+                    Dim result = cmd.ExecuteScalar()
+
+                    If result IsNot Nothing Then
+                        Return result.ToString()
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("Error loading email: " & ex.Message)
+        End Try
+
+        Return ""
+
+    End Function
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+        Try
+            If dgvRecords.CurrentRow Is Nothing Then
+                MessageBox.Show("Please select a record.")
+                Exit Sub
+            End If
+
+            Dim row As DataGridViewRow = dgvRecords.CurrentRow
+            Dim frm As New Sales_Templete()
+
+            frm.Customer = If(IsDBNull(row.Cells("Customer").Value), "", row.Cells("Customer").Value.ToString())
+            frm.Product = If(IsDBNull(row.Cells("Product").Value), "", row.Cells("Product").Value.ToString())
+            frm.Quantity = If(IsDBNull(row.Cells("Quantity").Value), "", row.Cells("Quantity").Value.ToString())
+            frm.UnitPrice = If(IsDBNull(row.Cells("Unit_Price").Value), "", row.Cells("Unit_Price").Value.ToString())
+            frm.Stage = If(IsDBNull(row.Cells("Stage").Value), "", row.Cells("Stage").Value.ToString())
+            frm.TotalPrice = If(IsDBNull(row.Cells("Total_Price").Value), "", row.Cells("Total_Price").Value.ToString())
+            frm.Sale_Date = If(IsDBNull(row.Cells("Sale_Date").Value), "", row.Cells("Sale_Date").Value.ToString())
+
+            frm.EmailAddress = GetCustomerEmail(cmbCustomer.Text)
+            frm.ShowDialog()
+
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message)
+        End Try
+        'LeadReport.ShowDialog()
+
+
+    End Sub
     Private Sub txtQuantity_TextChanged(sender As Object, e As EventArgs) Handles txtQuantity.TextChanged
         UpdateTotalPrice()
     End Sub
@@ -544,5 +650,10 @@ Public Class Add_Sales
     Private Sub dgvRecords_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvRecords.CellContentClick
 
     End Sub
+
+    'Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    '    OpenLeadReport()
+    '    Sales_Templete.ShowDialog()
+    'End Sub
 End Class
 

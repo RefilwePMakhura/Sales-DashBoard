@@ -57,10 +57,10 @@ Partial Class Sales_Order
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.Panel6 = New System.Windows.Forms.Panel()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.TextBox7 = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Panel4.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -395,6 +395,22 @@ Partial Class Sales_Order
         Me.Panel6.Size = New System.Drawing.Size(579, 97)
         Me.Panel6.TabIndex = 24
         '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(339, 71)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(44, 13)
+        Me.Label16.TabIndex = 25
+        Me.Label16.Text = "OrderID"
+        '
+        'TextBox7
+        '
+        Me.TextBox7.Location = New System.Drawing.Point(409, 64)
+        Me.TextBox7.Name = "TextBox7"
+        Me.TextBox7.Size = New System.Drawing.Size(167, 20)
+        Me.TextBox7.TabIndex = 26
+        '
         'Label8
         '
         Me.Label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
@@ -413,22 +429,6 @@ Partial Class Sales_Order
         Me.DataGridView1.Size = New System.Drawing.Size(581, 128)
         Me.DataGridView1.TabIndex = 6
         '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(339, 71)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(44, 13)
-        Me.Label16.TabIndex = 25
-        Me.Label16.Text = "OrderID"
-        '
-        'TextBox7
-        '
-        Me.TextBox7.Location = New System.Drawing.Point(409, 64)
-        Me.TextBox7.Name = "TextBox7"
-        Me.TextBox7.Size = New System.Drawing.Size(167, 20)
-        Me.TextBox7.TabIndex = 26
-        '
         'Sales_Order
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -440,6 +440,7 @@ Partial Class Sales_Order
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel3)
         Me.Name = "Sales_Order"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Sales_Order"
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()

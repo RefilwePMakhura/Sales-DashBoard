@@ -39,6 +39,7 @@ Partial Class Add_Sales
         Me.Label4 = New System.Windows.Forms.Label()
         Me.dgvRecords = New System.Windows.Forms.DataGridView()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.btnEdit = New System.Windows.Forms.Button()
         Me.btnSave = New System.Windows.Forms.Button()
@@ -201,6 +202,7 @@ Partial Class Add_Sales
         '
         Me.Panel3.BackColor = System.Drawing.SystemColors.ActiveCaption
         Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Panel3.Controls.Add(Me.Button2)
         Me.Panel3.Controls.Add(Me.btnClear)
         Me.Panel3.Controls.Add(Me.btnEdit)
         Me.Panel3.Controls.Add(Me.btnSave)
@@ -210,10 +212,19 @@ Partial Class Add_Sales
         Me.Panel3.Size = New System.Drawing.Size(659, 73)
         Me.Panel3.TabIndex = 4
         '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(418, 12)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(88, 47)
+        Me.Button2.TabIndex = 23
+        Me.Button2.Text = "Templete" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.Button2.UseVisualStyleBackColor = True
+        '
         'btnClear
         '
         Me.btnClear.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnClear.Location = New System.Drawing.Point(376, 12)
+        Me.btnClear.Location = New System.Drawing.Point(152, 12)
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(88, 47)
         Me.btnClear.TabIndex = 10
@@ -223,7 +234,7 @@ Partial Class Add_Sales
         'btnEdit
         '
         Me.btnEdit.BackColor = System.Drawing.Color.RoyalBlue
-        Me.btnEdit.Location = New System.Drawing.Point(529, 12)
+        Me.btnEdit.Location = New System.Drawing.Point(285, 12)
         Me.btnEdit.Name = "btnEdit"
         Me.btnEdit.Size = New System.Drawing.Size(88, 47)
         Me.btnEdit.TabIndex = 10
@@ -233,7 +244,7 @@ Partial Class Add_Sales
         'btnSave
         '
         Me.btnSave.BackColor = System.Drawing.Color.Lime
-        Me.btnSave.Location = New System.Drawing.Point(70, 12)
+        Me.btnSave.Location = New System.Drawing.Point(19, 12)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(88, 47)
         Me.btnSave.TabIndex = 1
@@ -243,7 +254,7 @@ Partial Class Add_Sales
         'btnClose
         '
         Me.btnClose.BackColor = System.Drawing.Color.Fuchsia
-        Me.btnClose.Location = New System.Drawing.Point(223, 12)
+        Me.btnClose.Location = New System.Drawing.Point(551, 12)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(88, 47)
         Me.btnClose.TabIndex = 2
@@ -340,4 +351,5 @@ Partial Class Add_Sales
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents Label6 As Label
+    Friend WithEvents Button2 As Button
 End Class

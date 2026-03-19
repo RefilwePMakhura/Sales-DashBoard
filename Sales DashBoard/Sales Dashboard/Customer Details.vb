@@ -4,7 +4,13 @@ Public Class Customer_Details
 
 
     Private Sub frmManageCustomer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ComboBox1.Items.Clear()
+        ComboBox1.Items.Add("All")
+        ComboBox1.Items.Add("Food")
+        ComboBox1.Items.Add("Drinks")
+        ComboBox1.Items.Add("Snacks")
 
+        ComboBox1.SelectedIndex = 0
         LoadCustomerIntoList()
     End Sub
 
@@ -42,11 +48,12 @@ Public Class Customer_Details
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
 
-                Using cmd As New OleDbCommand("INSERT INTO [Customer_Details] ([Customer_Name],[Address],[Contact],[Email]) VALUES (?,?,?,?)", conn)
+                Using cmd As New OleDbCommand("INSERT INTO [Customer_Details] ([Customer_Name],[Address],[Contact],[Email],[Category]) VALUES (?,?,?,?,?)", conn)
                     cmd.Parameters.AddWithValue("@Customer", txtCustomerName.Text)
                     cmd.Parameters.AddWithValue("@Address", TextBox1.Text)
                     cmd.Parameters.AddWithValue("@Contact", TextBox3.Text)
                     cmd.Parameters.AddWithValue("@Email", TextBox2.Text)
+                    cmd.Parameters.AddWithValue("@Category", ComboBox1.Text)
                     cmd.ExecuteNonQuery()
                 End Using
                 conn.Close()
@@ -62,4 +69,7 @@ Public Class Customer_Details
         End Try
     End Sub
 
+    Private Sub TextBox4_TextChanged(sender As Object, e As EventArgs)
+
+    End Sub
 End Class

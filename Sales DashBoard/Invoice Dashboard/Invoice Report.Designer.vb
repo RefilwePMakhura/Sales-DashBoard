@@ -231,6 +231,7 @@ Partial Class Invoice_Report
         Me.Controls.Add(Me.dgvInvoiceRecords)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "Invoice_Report"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Invoice_Report"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()

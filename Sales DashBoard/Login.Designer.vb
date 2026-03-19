@@ -29,12 +29,14 @@ Partial Class Login
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnSignUp = New System.Windows.Forms.Button()
         Me.btnLogin = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.Panel1.Controls.Add(Me.Button1)
         Me.Panel1.Controls.Add(Me.txtPassword)
         Me.Panel1.Controls.Add(Me.txtUserName)
         Me.Panel1.Controls.Add(Me.Label2)
@@ -81,7 +83,7 @@ Partial Class Login
         'btnSignUp
         '
         Me.btnSignUp.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnSignUp.Location = New System.Drawing.Point(25, 147)
+        Me.btnSignUp.Location = New System.Drawing.Point(12, 145)
         Me.btnSignUp.Name = "btnSignUp"
         Me.btnSignUp.Size = New System.Drawing.Size(75, 23)
         Me.btnSignUp.TabIndex = 1
@@ -91,12 +93,22 @@ Partial Class Login
         'btnLogin
         '
         Me.btnLogin.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnLogin.Location = New System.Drawing.Point(153, 147)
+        Me.btnLogin.Location = New System.Drawing.Point(93, 145)
         Me.btnLogin.Name = "btnLogin"
         Me.btnLogin.Size = New System.Drawing.Size(75, 23)
         Me.btnLogin.TabIndex = 0
         Me.btnLogin.Text = "Login"
         Me.btnLogin.UseVisualStyleBackColor = False
+        '
+        'Button1
+        '
+        Me.Button1.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Button1.Location = New System.Drawing.Point(174, 145)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 1
+        Me.Button1.Text = "Guideline"
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'Login
         '
@@ -121,4 +133,5 @@ Partial Class Login
     Friend WithEvents Label1 As Label
     Friend WithEvents btnSignUp As Button
     Friend WithEvents btnLogin As Button
+    Friend WithEvents Button1 As Button
 End Class

@@ -6,28 +6,28 @@ Module Module1
     Public ReadOnly ConnectionString As String = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=""{DBFile}"";Persist Security Info=False;"
     Dim conn As New OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=Rama's IT Centre.accdb")
 
-    Public Function Getconnection() As OleDbConnection
-        Return New OleDbConnection(ConnectionString)
-    End Function
+    'Public Function Getconnection() As OleDbConnection
+    '    Return New OleDbConnection(ConnectionString)
+    'End Function
 
-    Public Function SafeDec(value As Object) As Decimal
-        If value Is Nothing OrElse value Is DBNull.Value Then Return 0D
-        If IsNumeric(value.ToString()) Then
-            Return CDec(Val(value.ToString()))
-        End If
-        Return 0D
-    End Function
-    Public Function SafeInt(value As Object) As Integer
-        If value Is Nothing OrElse value Is DBNull.Value Then Return 0
-        If IsNumeric(value.ToString()) Then
-            Return CInt(Val(value.ToString()))
-        End If
-        Return 0
-    End Function
-    Public Function SafeStr(value As Object) As String
-        If value Is Nothing OrElse value Is DBNull.Value Then Return ""
-        Return value.ToString()
-    End Function
+    'Public Function SafeDec(value As Object) As Decimal
+    '    If value Is Nothing OrElse value Is DBNull.Value Then Return 0D
+    '    If IsNumeric(value.ToString()) Then
+    '        Return CDec(Val(value.ToString()))
+    '    End If
+    '    Return 0D
+    'End Function
+    'Public Function SafeInt(value As Object) As Integer
+    '    If value Is Nothing OrElse value Is DBNull.Value Then Return 0
+    '    If IsNumeric(value.ToString()) Then
+    '        Return CInt(Val(value.ToString()))
+    '    End If
+    '    Return 0
+    'End Function
+    'Public Function SafeStr(value As Object) As String
+    '    If value Is Nothing OrElse value Is DBNull.Value Then Return ""
+    '    Return value.ToString()
+    'End Function
 #Region "SKU"
     Private ReadOnly _skuPrefix As String
         Private ReadOnly _counterFile As String = Path.Combine(Application.StartupPath, "C:\Temp\sku_counter.txt")

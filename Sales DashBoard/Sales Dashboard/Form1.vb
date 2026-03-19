@@ -16,6 +16,7 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadTotalsFromDatabase()
         RefreshLabels()
+        ToolStripStatusLabel1.Text = "Logged in as: " & Session.CurrentUser
     End Sub
 
     Private Sub btnAddSales_Click(sender As Object, e As EventArgs) Handles btnAddSales.Click
@@ -264,8 +265,8 @@ Public Class Form1
     End Sub
 
     Private Sub btnProductMgmt_Click(sender As Object, e As EventArgs) Handles btnProductMgmt.Click
-        Dim FrmSalesDashboard As New frmProductManagement
-        frmProductManagement.ShowDialog()
+        Dim FrmSalesDashboard As New Bank_Transaction
+        Bank_Transaction.ShowDialog()
         Me.Hide() ' Hide instead of close if you want to reopen it later 
 
     End Sub
@@ -283,7 +284,7 @@ Public Class Form1
 
     Private Sub btnCRMDashboard_Click(sender As Object, e As EventArgs) Handles btnCRMDashBoard.Click
         Dim FrmSalesDashboard As New CRM_DashBoard
-        CRM_DashBoard.ShowDialog()
+        FrmSalesDashboard.ShowDialog()
         '  Me.Hide() ' Hide instead of close if you want to reopen it later 
 
     End Sub
@@ -333,4 +334,52 @@ Public Class Form1
     Private Sub Panel2_Paint(sender As Object, e As PaintEventArgs) Handles Panel2.Paint
 
     End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+
+
+        Dim result As DialogResult =
+        MessageBox.Show("Are you sure you want to switch user?",
+                        "Switch User",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question)
+
+        If result = DialogResult.No Then Exit Sub
+
+        Try
+            ' =========================
+            ' CLEAR SESSION
+            ' =========================
+            Session.Clear()
+
+            ' =========================
+            ' CLOSE CURRENT FORMS CLEANLY
+            ' =========================
+            For Each frm As Form In Application.OpenForms.Cast(Of Form).ToList()
+                frm.Hide()
+            Next
+
+            ' =========================
+            ' OPEN LOGIN FORM
+            ' =========================
+            Dim loginForm As New Login()
+            loginForm.StartPosition = FormStartPosition.CenterScreen
+            loginForm.Show()
+
+        Catch ex As Exception
+            MessageBox.Show("Error switching user: " & ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+
+        If Session.CurrentRole = "Admin" Or Session.CurrentRole = "Manager" Then
+            Dim frm As New Manage_User
+            frm.Show()
+        Else
+            MessageBox.Show("Access denied")
+        End If
+    End Sub
+
 End Class

@@ -43,7 +43,7 @@ Public Class frmInvoiceManagement
             ElseIf Today > DueDate.AddDays(1) Then
                 OverdueCount += 1
                 row.DefaultCellStyle.BackColor = Color.Red
-                row.Cells("Status").Value = "Overdue"
+                row.Cells("Status").Value = "Pending"
             Else
                 OutstandingCount += 1
                 row.DefaultCellStyle.BackColor = Color.Yellow
@@ -134,19 +134,19 @@ Public Class frmInvoiceManagement
         Invoice_Report.Show()
     End Sub
 
-    'Private Function IsInvoiceAlreadyPaid(Customer As String) As Boolean
-    '    Using conn As New OleDbConnection(ConnectionString)
-    '        conn.Open()
+    Private Function IsInvoiceAlreadyPaid(Customer As String) As Boolean
+        Using conn As New OleDbConnection(ConnectionString)
+            conn.Open()
 
-    '        Dim cmd As New OleDbCommand(
-    '            "SELECT Status FROM Invoice_Details WHERE Customer = ?", conn)
+            Dim cmd As New OleDbCommand(
+                "SELECT Status FROM Invoice_Details WHERE Customer = ?", conn)
 
-    '        cmd.Parameters.AddWithValue("@Customer", Customer)
-    '        Dim status As String = cmd.ExecuteScalar().ToString()
+            cmd.Parameters.AddWithValue("@Customer", Customer)
+            Dim status As String = cmd.ExecuteScalar().ToString()
 
-    '        Return status = "Paid"
-    '    End Using
-    'End Function
+            Return status = "Paid"
+        End Using
+    End Function
 
     Private Sub dgvInvoiceRecords_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvInvoiceRecords.CellClick
         If e.RowIndex >= 0 Then
@@ -166,18 +166,37 @@ Public Class frmInvoiceManagement
                 Exit Sub
             End If
 
-            Dim PaymentFrm As New PaymentFrm
+            Dim Payable As New PaymentFrm
 
-            PaymentFrm.txtInvoiceNo.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("InvoiceID").Value.ToString
-            PaymentFrm.TextBox1.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Status").Value.ToString
-            PaymentFrm.txtTotalAmount.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Total").Value.ToString
+            Payable.txtInvoiceNo.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("InvoiceID").Value.ToString
+            Payable.TextBox1.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Status").Value.ToString
+            Payable.txtTotalAmount.Text = dgvInvoiceRecords.Rows(e.RowIndex).Cells("Total").Value.ToString
             Dim refence As String = Module1.Generaterefence
-            PaymentFrm.TextBox2.Text = refence
+            Payable.TextBox2.Text = refence
 
-            PaymentFrm.ShowDialog()
+            Payable.ShowDialog()
         End If
     End Sub
 
+    'Private Sub DataGridView1_SelectionChanged(sender As Object, e As EventArgs) Handles dgvInvoiceRecords.SelectionChanged
+    '    If dgvInvoiceRecords.SelectedRows.Count = 0 Then Return
+
+    '    Try
+    '        Dim selectedRow = dgvInvoiceRecords.SelectedRows(0)
+
+    '        '    ComboBox1.Text = If(selectedRow.Cells("Supplier").Value IsNot Nothing, selectedRow.Cells("Supplier").Value.ToString(), "")
+    '        '  ComboBox2.Text = If(selectedRow.Cells("Customer").Value IsNot Nothing, selectedRow.Cells("Customer").Value.ToString(), "")
+    '        '      ComboBox4.Text = If(selectedRow.Cells("Product").Value IsNot Nothing, selectedRow.Cells("Product").Value.ToString(), "")
+    '        '    TextBox11.Text = If(selectedRow.Cells("Quantity").Value IsNot Nothing, selectedRow.Cells("Quantity").Value.ToString(), "")
+    '        '        TextBox7.Text = If(selectedRow.Cells("Amount").Value IsNot Nothing, selectedRow.Cells("Amount").Value.ToString(), "")
+    '        TextBox5.Text = If(selectedRow.Cells("InvoiceID").Value IsNot Nothing, selectedRow.Cells("InvoiceID").Value.ToString(), "")
+    '        TextBox9.Text = If(selectedRow.Cells("Status").Value IsNot Nothing, selectedRow.Cells("Status").Value.ToString(), "")
+    '        TextBox10.Text = If(selectedRow.Cells("Total").Value IsNot Nothing, selectedRow.Cells("Total").Value.ToString(), "")
+
+    '    Catch ex As Exception
+    '        MessageBox.Show("Error selecting row: " & ex.Message)
+    '    End Try
+    'End Sub
     Private Sub UpgradeInvoicestatis()
 
     End Sub

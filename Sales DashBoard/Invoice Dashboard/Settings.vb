@@ -72,8 +72,27 @@ Public Class Settings
     '    End Try
     'End Sub
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        My.Settings.UserName = TextBox10.Text
-        ' My.Settings.Port = TextBox2.Text
-        My.Settings.Save()
+        Try
+            My.Settings.SmptAuth = CheckBox2.Checked
+            My.Settings.SmptFrom = TextBox9.Text.Trim()
+            My.Settings.SmptPort = Integer.Parse(TextBox8.Text.Trim())
+            My.Settings.SmptHost = TextBox6.Text.Trim()
+            My.Settings.SmptSslEnable = CheckBox1.Checked
+            My.Settings.SmptUsername = TextBox10.Text.Trim()
+            My.Settings.SmptPassword = TextBox11.Text.Trim()
+
+            My.Settings.Save()
+            MessageBox.Show("Email Configuration Saved")
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+
+    End Sub
+
+    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
+
     End Sub
 End Class

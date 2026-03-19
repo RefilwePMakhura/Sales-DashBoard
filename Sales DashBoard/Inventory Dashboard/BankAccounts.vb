@@ -52,7 +52,7 @@ Public Class BankAccounts
                 End Using
                 conn.Close()
                 LoadBankAccount()
-
+                Bank_Transaction.ShowDialog()
             End Using
             MessageBox.Show("Saved successful!", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information)
 

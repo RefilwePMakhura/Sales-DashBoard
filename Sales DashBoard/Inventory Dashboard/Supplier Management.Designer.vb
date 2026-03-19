@@ -265,6 +265,7 @@ Partial Class Supplier_Management
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.DataGridView)
         Me.Name = "Supplier_Management"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Supplier_Management"
         CType(Me.DataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)

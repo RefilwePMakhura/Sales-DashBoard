@@ -79,10 +79,10 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property SmptPort() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("587")>  _
+        Public Property SmptPort() As Integer
             Get
-                Return CType(Me("SmptPort"),String)
+                Return CType(Me("SmptPort"),Integer)
             End Get
             Set
                 Me("SmptPort") = value
@@ -91,13 +91,73 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property Smpt() As String
+         Global.System.Configuration.DefaultSettingValueAttribute(" smtp.gmail.com")>  _
+        Public Property SmptHost() As String
             Get
-                Return CType(Me("Smpt"),String)
+                Return CType(Me("SmptHost"),String)
             End Get
             Set
-                Me("Smpt") = value
+                Me("SmptHost") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property SmptSslEnable() As Boolean
+            Get
+                Return CType(Me("SmptSslEnable"),Boolean)
+            End Get
+            Set
+                Me("SmptSslEnable") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property SmptAuth() As Boolean
+            Get
+                Return CType(Me("SmptAuth"),Boolean)
+            End Get
+            Set
+                Me("SmptAuth") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("refilwemakhura12@gmail.com")>  _
+        Public Property SmptUsername() As String
+            Get
+                Return CType(Me("SmptUsername"),String)
+            End Get
+            Set
+                Me("SmptUsername") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("pktb glrx opor dbky")>  _
+        Public Property SmptPassword() As String
+            Get
+                Return CType(Me("SmptPassword"),String)
+            End Get
+            Set
+                Me("SmptPassword") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("refilwemakhura12@gmail.com")>  _
+        Public Property SmptFrom() As String
+            Get
+                Return CType(Me("SmptFrom"),String)
+            End Get
+            Set
+                Me("SmptFrom") = value
             End Set
         End Property
     End Class

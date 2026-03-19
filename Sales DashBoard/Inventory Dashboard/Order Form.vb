@@ -1,106 +1,145 @@
 ﻿Imports System.Data.OleDb
 
 Public Class Order_Form
-    Dim Subtotal As Decimal = 0D
 
-    Private Function GetProduct() As DataTable
-        Dim dt As New DataTable
-        Using conn As New OleDbConnection(ConnectionString)
-            conn.Open()
-            Dim sql As String = "SELECT Product_Name FROM [Product_Details] GROUP BY Product_Name"
-            Using da As New OleDbDataAdapter(sql, conn)
-                da.Fill(dt)
-            End Using
-        End Using
-        Return dt
-    End Function
-    Private Sub SetUpOrderGrid()
+    Private ReadOnly DBFile As String = "C:\Users\Refilwe\Documents\Visual Studio 2015\Projects\Sales DashBoard\Rama's IT Centre.accdb"
+    Private ConnectionString As String = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=""{DBFile}"";Persist Security Info=False;"
+    Private ProductPrice As Decimal = 0D
+
+    Private Sub Order_Form_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        '  SetupDataGridView()
+        LoadData()
+        ReloadCustomersCombo()
+        LoadSuppliers()
+        LoadProductsToComboBox()
+        LoadCompanyInfo()
+        CalculateTotal()
+    End Sub
+
+    Private Sub SetupDataGridView()
         DataGridView1.Columns.Clear()
         DataGridView1.AutoGenerateColumns = False
+        DataGridView1.AllowUserToAddRows = False
 
-        Dim colProduct As New DataGridViewComboBoxColumn With {
-          .Name = "Product",
-       .HeaderText = "Product",
-       .DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox}
+        Dim colPOID As New DataGridViewTextBoxColumn With {
+            .Name = "PO_ID",
+            .HeaderText = "PO_ID",
+            .DataPropertyName = "PO_ID"
+        }
+        DataGridView1.Columns.Add(colPOID)
 
+        Dim colSupplier As New DataGridViewTextBoxColumn With {
+            .Name = "Supplier",
+            .HeaderText = "Supplier",
+            .DataPropertyName = "Supplier"
+        }
+        DataGridView1.Columns.Add(colSupplier)
+
+        Dim colDate As New DataGridViewTextBoxColumn With {
+            .Name = "PO_Date",
+            .HeaderText = "PO Date",
+            .DataPropertyName = "PO_Date"
+        }
+        DataGridView1.Columns.Add(colDate)
+
+        Dim colCustomer As New DataGridViewTextBoxColumn With {
+            .Name = "Customer",
+            .HeaderText = "Customer",
+            .DataPropertyName = "Customer"
+        }
+        DataGridView1.Columns.Add(colCustomer)
+
+        Dim colProduct As New DataGridViewTextBoxColumn With {
+            .Name = "Product",
+            .HeaderText = "Product",
+            .DataPropertyName = "Product"
+        }
         DataGridView1.Columns.Add(colProduct)
 
-        DataGridView1.Columns.Add("Delivery", "Delivery")
-        DataGridView1.Columns.Add("Quantity", "Quantity")
-        DataGridView1.Columns.Add("Amount", "Amount")
-        DataGridView1.Columns.Add("VAT", "VAT")
-        DataGridView1.Columns.Add("LineTotal", "LineTotal")
-        DataGridView1.Columns.Add("Total", "Total")
+        Dim colQty As New DataGridViewTextBoxColumn With {
+            .Name = "Quantity",
+            .HeaderText = "Quantity",
+            .DataPropertyName = "Quantity"
+        }
+        DataGridView1.Columns.Add(colQty)
+
+        Dim colUnitPrice As New DataGridViewTextBoxColumn With {
+            .Name = "Unit_Price",
+            .HeaderText = "Unit Price",
+            .DataPropertyName = "Unit_Price"
+        }
+        DataGridView1.Columns.Add(colUnitPrice)
+
+        Dim colDiscount As New DataGridViewTextBoxColumn With {
+            .Name = "Discount",
+            .HeaderText = "Discount (%)",
+            .DataPropertyName = "Discount"
+        }
+        DataGridView1.Columns.Add(colDiscount)
+
+        Dim colVAT As New DataGridViewTextBoxColumn With {
+            .Name = "VAT",
+            .HeaderText = "VAT (15%)",
+            .DataPropertyName = "VAT"
+        }
+        DataGridView1.Columns.Add(colVAT)
+
+        Dim colTotal As New DataGridViewTextBoxColumn With {
+            .Name = "Total",
+            .HeaderText = "Total",
+            .DataPropertyName = "Total"
+        }
+        DataGridView1.Columns.Add(colTotal)
+
+
     End Sub
-    Private Sub LoadOrderData()
+
+    Private Sub LoadProductsToComboBox()
+        ComboBox4.Items.Clear()
 
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
 
-                Dim sql As String = "SELECT * FROM [Order]"
-                Dim adapter As New OleDbDataAdapter(sql, conn)
-                Dim table As New DataTable
-                adapter.Fill(table)
-                DataGridView1.DataSource = table
+                Dim sql As String = "SELECT [Product_Name] FROM [Product_Details] ORDER BY [Product_Name]"
+                Using cmd As New OleDbCommand(sql, conn)
+                    Using reader As OleDbDataReader = cmd.ExecuteReader()
+                        While reader.Read()
+                            ComboBox4.Items.Add(reader("Product_Name").ToString())
+                        End While
+                    End Using
+                End Using
             End Using
+
         Catch ex As Exception
-            MessageBox.Show("Failed to load data: " & ex.Message)
+            MessageBox.Show("Error loading products: " & ex.Message)
         End Try
     End Sub
 
-    Private Sub frmOrderForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ComboBox3.Items.AddRange(New String() {"Pickup", "Supplier Delivery", "Courier"})
-        ComboBox3.SelectedIndex = 0
-        LoadCompanyInfo()
+    Public Sub LoadData()
 
-        LoadOrderData()
-        LoadSuppliers()
-        ClearForm()
-        ReloadCustomersCombo()
-        UpdateStockAfterPurchase()
-        ColorGrid()
-        UpdateTotals()
-        LoadProductToCombBox()
-    End Sub
+        Dim dt As New DataTable()
 
-    Private Function GetProducts() As DataTable
-        Dim dt As New DataTable
         Using conn As New OleDbConnection(ConnectionString)
             conn.Open()
-            Dim sql As String = "SELECT [Product_Name], [Unit_Price] FROM [Product_Details] ORDER BY [Product_Name]"
-            Using da As New OleDbDataAdapter(sql, conn)
-                da.Fill(dt)
-            End Using
-        End Using
-        Return dt
-    End Function
-    Private Sub LoadCompanyInfo()
-        Using conn As New OleDb.OleDbConnection(ConnectionString)
-            conn.Open()
 
-            Dim cmd As New OleDbCommand("SELECT TOP 1 * FROM CompanySettings", conn)
-            Using dr As OleDb.OleDbDataReader = cmd.ExecuteReader
-                If dr.Read() Then
-                    Label12.Text = dr("CompanyName").ToString()
-                    Label13.Text = dr("Address").ToString()
-                    Label14.Text = dr("Phone").ToString()
-                    Label15.Text = dr("Email").ToString
+            Dim cmd As New OleDbCommand("SELECT * FROM [Order]", conn)
+            Dim da As New OleDbDataAdapter(cmd)
+            da.Fill(dt)
 
-                    Dim logoPath As String = dr("LogoPath").ToString()
-                    If IO.File.Exists(logoPath) Then
-                        PictureBox1.Image = Image.FromFile(logoPath)
-                    End If
-                End If
-            End Using
         End Using
+
+        DataGridView1.DataSource = dt
+        DataGridView1.ClearSelection()
+        DataGridView1.CurrentCell = Nothing
+
     End Sub
 
     Private Sub LoadSuppliers()
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
-                Dim cmd As New OleDbCommand("SELECT SupplierName FROM Supplier ORDER BY SupplierName", conn)
+                Dim cmd As New OleDbCommand("SELECT [SupplierName] FROM [Supplier] ORDER BY [SupplierName]", conn)
                 Using reader As OleDbDataReader = cmd.ExecuteReader()
                     ComboBox1.Items.Clear()
                     While reader.Read()
@@ -111,404 +150,273 @@ Public Class Order_Form
         Catch ex As Exception
             MessageBox.Show("Failed to load suppliers: " & ex.Message)
         End Try
-
     End Sub
-    Private Sub ReloadCustomersCombo()
-        'ComboBox2.Items.Clear()
-        'ClearForm()
+
+    Public Sub ReloadCustomersCombo()
+        ComboBox2.Items.Clear()
+
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
-                Dim sql As String = "SELECT DISTINCT Customer_Name FROM Customer_Details ORDER BY Customer_Name"
+                Dim sql As String = "SELECT DISTINCT [Customer_Name] FROM [Customer_Details] ORDER BY [Customer_Name]"
                 Using cmd As New OleDbCommand(sql, conn)
                     Using reader As OleDbDataReader = cmd.ExecuteReader()
-                        ComboBox2.Items.Clear()
                         While reader.Read()
                             ComboBox2.Items.Add(reader("Customer_Name").ToString())
                         End While
                     End Using
                 End Using
-                conn.Close()
             End Using
 
-            ' Optional: select first customer
-            'If ComboBox2.Items.Count > 0 AndAlso ComboBox2.SelectedIndex = -1 Then
-            '    ComboBox2.SelectedIndex = 0
-            'End If
-
         Catch ex As Exception
-            MessageBox.Show("Error loading customer from database: " & ex.Message)
+            MessageBox.Show("Error loading customers: " & ex.Message)
         End Try
     End Sub
-    Private Sub loadSupplierinfo(supplier As String)
+
+    Private Function GetRow(tableName As String, fieldName As String, value As String) As OleDbDataReader
+        Dim conn As New OleDbConnection(ConnectionString)
+        Dim cmd As New OleDbCommand($"SELECT * FROM {tableName} WHERE {fieldName} = ?", conn)
+        cmd.Parameters.AddWithValue("?", value)
+        conn.Open()
+        Return cmd.ExecuteReader(CommandBehavior.CloseConnection)
+    End Function
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        If ComboBox1.SelectedIndex = -1 Then Exit Sub
+
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
-                Dim sql As String = "SELECT TOP 1 [Contact_Person],[EmailAddress],[Physical_Address] FROM [Supplier] WHERE SupplierName=?"
+                Dim cmd As New OleDbCommand("SELECT [Contact_Person], [PhoneNumber], [Physical_Address], [EmailAddress] FROM [Supplier] WHERE [SupplierName] = ?", conn)
+                cmd.Parameters.AddWithValue("?", ComboBox1.Text)
+
+                Using dr As OleDbDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
+                        TextBox3.Text = dr("Contact_Person").ToString()
+                        TextBox1.Text = dr("PhoneNumber").ToString()
+                        TextBox4.Text = dr("Physical_Address").ToString()
+                        TextBox6.Text = dr("EmailAddress").ToString()
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Failed to load supplier details: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+        If ComboBox2.SelectedIndex = -1 Then Exit Sub
+        LoadCustomerInfo(ComboBox2.Text)
+    End Sub
+
+    Private Sub LoadCustomerInfo(customerName As String)
+        Try
+            Using conn As New OleDbConnection(ConnectionString)
+                conn.Open()
+                Dim sql As String = "SELECT TOP 1 [Address] FROM [Customer_Details] WHERE [Customer_Name] = ?"
                 Using cmd As New OleDbCommand(sql, conn)
-                    cmd.Parameters.AddWithValue("?", supplier)
+                    cmd.Parameters.AddWithValue("?", customerName)
                     Using reader As OleDbDataReader = cmd.ExecuteReader()
                         If reader.Read() Then
-                            TextBox3.Text = reader("Contact_Person").ToString()
-                            TextBox6.Text = reader("EmailAddress").ToString()
-                            TextBox4.Text = reader("Physical_Address").ToString()
+                            TextBox2.Text = reader("Address").ToString()
+                        Else
+                            TextBox2.Clear()
                         End If
                     End Using
-                    conn.Close()
                 End Using
             End Using
         Catch ex As Exception
-
+            MessageBox.Show("Failed to load customer details: " & ex.Message)
         End Try
     End Sub
-    Private Sub LoadProductToCombBox()
-        ComboBox4.Items.Clear()
+
+    Private Sub ComboBox4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox4.SelectedIndexChanged
+        If ComboBox4.SelectedIndex = -1 Then Exit Sub
+
+        Try
+            Using r = GetRow("[Product_Details]", "[Product_Name]", ComboBox4.Text)
+                If r.Read() Then
+                    ProductPrice = Convert.ToDecimal(r("Unit_Price"))
+                    TextBox7.Text = ProductPrice.ToString("0.00")
+                End If
+            End Using
+
+            CalculateTotal()
+
+        Catch ex As Exception
+            MessageBox.Show("Failed to load product price: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub TextBox11_TextChanged(sender As Object, e As EventArgs) Handles TextBox11.TextChanged
+        CalculateTotal()
+    End Sub
+
+    Private Sub TextBox5_TextChanged(sender As Object, e As EventArgs) Handles TextBox5.TextChanged
+        CalculateTotal()
+    End Sub
+
+    Private Sub CalculateTotal()
+        Dim qty As Decimal = 0D
+        Dim discount As Decimal = 0D
+
+        Decimal.TryParse(TextBox11.Text, qty)
+        Decimal.TryParse(TextBox5.Text, discount)
+
+        Dim subtotal As Decimal = qty * ProductPrice
+        subtotal -= subtotal * (discount / 100D)
+
+        Dim totalTax As Decimal = subtotal * 0.15D
+        Dim total As Decimal = subtotal + totalTax
+
+        TextBox9.Text = totalTax.ToString("0.00")
+        TextBox10.Text = total.ToString("0.00")
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        If ComboBox1.SelectedIndex < 0 Then
+            MessageBox.Show("Please select supplier.")
+            Exit Sub
+        End If
+
+        If ComboBox2.SelectedIndex < 0 Then
+            MessageBox.Show("Please select customer.")
+            Exit Sub
+        End If
+
+        If ComboBox4.SelectedIndex < 0 Then
+            MessageBox.Show("Please select product.")
+            Exit Sub
+        End If
+
+        Dim supplier As String = ComboBox1.Text
+        Dim customer As String = ComboBox2.Text
+        Dim product As String = ComboBox4.Text
+        Dim poDate As Date = DateTimePicker1.Value
+        Dim poID As String = "PO" & DateTime.Now.ToString("yyyyMMddHHmmss")
+
+        Dim qty As Decimal = 0D
+        Dim discount As Decimal = 0D
+        Dim vat As Decimal = 0D
+        Dim total As Decimal = 0D
+
+        Decimal.TryParse(TextBox11.Text, qty)
+        Decimal.TryParse(TextBox5.Text, discount)
+        Decimal.TryParse(TextBox9.Text, vat)
+        Decimal.TryParse(TextBox10.Text, total)
+
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
-                Dim sql As String = "SELECT [Product_Name], [Unit_Price] FROM [Product_Details] ORDER BY [Product_Name]"
+
+                Dim sql As String =
+                    "INSERT INTO [Order] " &
+                    "([PO_ID], [Product], [Quantity], [Amount], [Delivery], [VAT], [Total]) " &
+                    "VALUES (?,?,?,?,?,?,?)"
+
                 Using cmd As New OleDbCommand(sql, conn)
-                    Using reader As OleDbDataReader = cmd.ExecuteReader()
-                        While reader.Read()
-                            ComboBox4.Items.Add(reader("Product_Name").ToString())
-                            TextBox7.Text = Subtotal
-                        End While
-                    End Using
-                End Using
-                conn.Close()
-            End Using
-
-            'If ComboBox4.Items.Count > 0 AndAlso ComboBox1.SelectedIndex = -1 Then
-            '    ComboBox4.SelectedIndex = 0
-            'End If
-
-        Catch ex As Exception
-            MessageBox.Show("Error loading products: " & ex.Message)
-        End Try
-    End Sub
-    Private Sub ClearForm()
-        TextBox3.Clear()
-        TextBox4.Clear()
-        TextBox6.Clear()
-        TextBox2.Clear()
-    End Sub
-    Private Sub UpdateStockAfterPurchase()
-        Using conn As New OleDbConnection(ConnectionString)
-            conn.Open()
-
-            For Each row As DataGridViewRow In DataGridView1.Rows
-                If row.IsNewRow Then Continue For
-
-                Dim ProductName As String = row.Cells("Product").Value.ToString()
-                Dim QuantityPurchased As Integer = Convert.ToInt32(row.Cells("Quantity").Value)
-
-                Using cmd As New OleDbCommand(
-                "UPDATE Product_Details
-                SET Current_Stock = Current_Stock + ?
-               WHERE Product_Name = ?", conn)
-
-                    cmd.Parameters.Add("@Current_Stock", OleDbType.Integer).Value = QuantityPurchased
-                    cmd.Parameters.Add("@Product", OleDbType.VarWChar).Value = ProductName
-
+                    cmd.Parameters.AddWithValue("?", poID)
+                    cmd.Parameters.AddWithValue("?", product)
+                    cmd.Parameters.AddWithValue("?", qty)
+                    cmd.Parameters.AddWithValue("?", ProductPrice)
+                    cmd.Parameters.AddWithValue("?", discount)
+                    cmd.Parameters.AddWithValue("?", vat)
+                    cmd.Parameters.AddWithValue("?", total)
                     cmd.ExecuteNonQuery()
                 End Using
-            Next
-        End Using
-    End Sub
-    Private Sub dgvOrderRecords_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
-        If e.RowIndex < 0 Then Exit Sub
-        Dim pay As New Payable
-
-        pay.SelectedSupplierID = DataGridView1.Rows(e.RowIndex).Cells("POID").Value.ToString()
-        pay.selectedCustomer = DataGridView1.Rows(e.RowIndex).Cells("Supplier").Value.ToString()
-        pay.SelectedTax = DataGridView1.Rows(e.RowIndex).Cells("VAT").Value.ToString()
-        pay.selectedQty = DataGridView1.Rows(e.RowIndex).Cells("Quantity").Value.ToString()
-        ' pay.selectedDate = DataGridView1.Rows(e.RowIndex).Cells("PODate").Value.ToString()
-        pay.InvoiceAmount = DataGridView1.Rows(e.RowIndex).Cells("Total").Value.ToString()
-        pay.ShowDialog()
-    End Sub
-    'Private Function CalculateDelivery(Subtotal As Decimal) As Decimal
-    '    If Subtotal > 3000D Then
-    '        Return 150D
-    '    Else
-    '        Return 0D
-    '    End If
-    'End Function
-    'Private Sub CalculateRow(row As DataGridViewRow)
-    '    If row Is Nothing OrElse row.IsNewRow Then Exit Sub
-
-    '    Dim qty As Integer = 0
-    '    Dim unitPrice As Decimal = 0D
-    '    Dim discountPercent As Decimal = 0D
-
-    '    Integer.TryParse(row.Cells("Quantity").Value?.ToString(), qty)
-    '    Decimal.TryParse(row.Cells("Amount").Value?.ToString(), unitPrice)
-    '    Decimal.TryParse(row.Cells("Delivery").Value?.ToString(), discountPercent)
-
-    '    Dim gross As Decimal = qty * unitPrice
-    '    ' Dim discountAmount As Decimal = gross + discountPercent
-    '    Dim subtotal As Decimal = gross
-    '    Dim vat As Decimal = subtotal * 0.15D
-    '    Dim totalWithVAT As Decimal = subtotal + vat - discountPercent
-
-    '    row.Cells("LineTotal").Value = Math.Round(subtotal, 2)
-    '    row.Cells("VAT").Value = Math.Round(vat, 2)
-    '    row.Cells("Total").Value = Math.Round(totalWithVAT, 2)
-
-    '    TextBox7.Text = subtotal.ToString("N2")
-    '    TextBox5.Text = discountPercent.ToString()
-    '    TextBox9.Text = vat.ToString("N2")
-    '    TextBox10.Text = totalWithVAT.ToString("N2")
-
-    '  End Sub
-
-    Private Sub dgvOrderRecords_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellEndEdit
-        If e.RowIndex > 0 Then
-            Exit Sub
-            Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
-
-            If e.ColumnIndex = DataGridView1.Columns("Product").Index Then
-
-                Dim ProductName As String = row.Cells("Product").Value?.ToString()
-                If String.IsNullOrEmpty(ProductName) Then Exit Sub
-
-                Dim dtProduct As DataTable = TryCast(DataGridView1.Tag, DataTable)
-                If dtProduct IsNot Nothing Then
-                    Dim Found() As DataRow = dtProduct.Select("Product_Name =" & ProductName.Replace("'", "'") & "'")
-                    If Found.Length > 0 Then
-                        row.Cells("Subtotal").Value = Convert.ToDecimal(Found(0)("Subtotal"))
-                    End If
-                End If
-            End If
-
-            Dim qty As Decimal = 0, UnitPrice As Decimal = 0, Discount As Decimal = 0
-            Decimal.TryParse(row.Cells("Quantity").Value?.ToString(), qty)
-            Decimal.TryParse(row.Cells("Subtotal").Value?.ToString(), Subtotal)
-            Decimal.TryParse(row.Cells("Discount").Value?.ToString(), Discount)
-
-            Dim Linetotal As Decimal = qty * Subtotal
-            Dim DiscountAmount As Decimal = Linetotal * (Discount / 100D)
-            Dim Amount As Decimal = Linetotal - DiscountAmount
-            Dim VAT As Decimal = Amount * 0.15D
-            Dim Total As Decimal = Amount + VAT
-
-            row.Cells("LineTotal").Value = Math.Round(Subtotal, 2)
-            row.Cells("VAT").Value = Math.Round(VAT, 2)
-            row.Cells("Total").Value = Math.Round(Total, 2)
-
-        End If
-    End Sub
-
-    Private Sub dgvOrderRecords_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellValueChanged
-        If e.RowIndex < 0 Then Exit Sub
-
-        If DataGridView1.Columns(e.ColumnIndex).Name <> "Product" Then Exit Sub
-        Dim row = DataGridView1.Rows(e.RowIndex)
-        Dim ProductName = row.Cells("Product").Value?.ToString()
-        If String.IsNullOrEmpty(ProductName) Then Exit Sub
-
-        Using conn As New OleDbConnection(ConnectionString)
-            conn.Open()
-            Using cmd As New OleDbCommand(" SELECT  Unit_Price FROM [Product_Details] WHERE Product_Name = ?", conn)
-                cmd.Parameters.AddWithValue("@p1", ProductName)
-                Dim Price = cmd.ExecuteScalar()
-                If Price IsNot Nothing Then
-                    row.Cells("Amount").Value = Convert.ToDecimal(Price)
-                    row.Cells("Quantity").Value = 1
-                    '  CalculateRow(row)
-                    'CalculateGrandTotal()
-                End If
             End Using
-        End Using
 
+            MessageBox.Show("Order saved successfully.")
+            LoadData()
+
+        Catch ex As Exception
+            MessageBox.Show("Failed to save: " & ex.Message)
+        End Try
     End Sub
-    Private Sub UpdateTotals()
 
-        Dim qty, vatTotal, discount As Decimal
-
-        Decimal.TryParse(TextBox11.Text, qty)
-        Decimal.TryParse(TextBox9.Text, vatTotal)
-        Decimal.TryParse(TextBox5.Text, discount)
-        Dim total = qty * Subtotal
-
-        total -= total * (discount / 100D)
-        vatTotal = total * 0.15D
-        TextBox10.Text = total.ToString("0.00")
-        TextBox9.Text = vatTotal.ToString("0.00")
-
-
-    End Sub
     Public Sub ColorGrid()
         For Each row As DataGridViewRow In DataGridView1.Rows
-
             If row.IsNewRow Then Continue For
+
             If row.Cells("Status").Value IsNot Nothing Then
-                Dim StatusValue As String = row.Cells("Status").Value.ToString
-                If StatusValue = "Paid" Then
-                    row.DefaultCellStyle.BackColor = Color.LightGreen
-                ElseIf StatusValue = "Pending" Then
+                Dim statusValue As String = row.Cells("Status").Value.ToString()
+
+                If statusValue = "Paid" Then
+                    row.DefaultCellStyle.BackColor = Color.LightBlue
+                ElseIf statusValue = "Pending" Then
                     row.DefaultCellStyle.BackColor = Color.LightPink
                 End If
             End If
         Next
     End Sub
 
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
-    End Sub
-
-    Private Function GetRow(table As String, field As String, value As String) As OleDbDataReader
-        Dim conn As New OleDbConnection(Module1.ConnectionString)
-        Dim cmd As New OleDbCommand($"SELECT * from {table} WHERE {field} = ?", conn)
-        cmd.Parameters.AddWithValue("?", OleDbType.VarChar).Value = value
-        conn.Open()
-        Return cmd.ExecuteReader(CommandBehavior.CloseConnection)
-
-    End Function
-
-    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        Using r = GetRow(" Supplier", "SupplierName", ComboBox1.Text)
-            If r.Read() Then
-                TextBox3.Text = r("Contact_Person").ToString()
-                TextBox6.Text = r("EmailAddress").ToString
-                TextBox4.Text = r("Physical_Address").ToString
-            End If
-
-        End Using
-    End Sub
-    Private Function GetRows(table As String, field As String, value As String) As OleDbDataReader
-        Dim conn As New OleDbConnection(Module1.ConnectionString)
-        Dim cmd As New OleDbCommand($"SELECT * from {table} WHERE {field} = ?", conn)
-        cmd.Parameters.AddWithValue("?", OleDbType.VarChar).Value = value
-        conn.Open()
-        Return cmd.ExecuteReader(CommandBehavior.CloseConnection)
-
-    End Function
-
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-
-        If ComboBox1.SelectedIndex < 0 Then
-            MessageBox.Show("Please select a supplier.")
-            Exit Sub
-        End If
-
-        If DataGridView1.Rows.Count = 0 Then
-            MessageBox.Show("Please add at least one product.")
-            Exit Sub
-        End If
-
-        Dim poID As String = "PO" & DateTime.Now.ToString("yyyyMMddHHmmss")
+    Private Sub DataGridView1_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView1.SelectionChanged
+        If DataGridView1.SelectedRows.Count = 0 Then Return
 
         Try
-            Using conn As New OleDbConnection(ConnectionString)
-                conn.Open()
+            Dim selectedRow = DataGridView1.SelectedRows(0)
 
-                For Each row As DataGridViewRow In DataGridView1.Rows
-                    If row.IsNewRow Then Continue For
-
-                    Using cmd As New OleDbCommand("
-                    INSERT INTO [Order] 
-                    ([PO_ID], [Product], [Quantity], [Amount], [Delivery], [VAT], [Total], [Status]) 
-                    VALUES (?,?,?,?,?,?,?,?)", conn)
-
-                        cmd.Parameters.AddWithValue("?", poID)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Product").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Quantity").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Amount").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Delivery").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("VAT").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Total").Value)
-                        cmd.Parameters.AddWithValue("?", row.Cells("Status").Value)
-                        cmd.ExecuteNonQuery()
-                    End Using
-                Next
-            End Using
-
-            MessageBox.Show("Purchase order saved successfully!")
-
-            UpdateStockAfterPurchase()
-
-            '    DataGridView1.Rows.Clear()
-            ComboBox1.SelectedIndex = -1
-            UpdateTotals()
-            Payable.ShowDialog()
-            LoadOrderData()
+            '    ComboBox1.Text = If(selectedRow.Cells("Supplier").Value IsNot Nothing, selectedRow.Cells("Supplier").Value.ToString(), "")
+            '  ComboBox2.Text = If(selectedRow.Cells("Customer").Value IsNot Nothing, selectedRow.Cells("Customer").Value.ToString(), "")
+            ComboBox4.Text = If(selectedRow.Cells("Product").Value IsNot Nothing, selectedRow.Cells("Product").Value.ToString(), "")
+            TextBox11.Text = If(selectedRow.Cells("Quantity").Value IsNot Nothing, selectedRow.Cells("Quantity").Value.ToString(), "")
+            TextBox7.Text = If(selectedRow.Cells("Amount").Value IsNot Nothing, selectedRow.Cells("Amount").Value.ToString(), "")
+            TextBox5.Text = If(selectedRow.Cells("Delivery").Value IsNot Nothing, selectedRow.Cells("Delivery").Value.ToString(), "")
+            TextBox9.Text = If(selectedRow.Cells("VAT").Value IsNot Nothing, selectedRow.Cells("VAT").Value.ToString(), "")
+            TextBox10.Text = If(selectedRow.Cells("Total").Value IsNot Nothing, selectedRow.Cells("Total").Value.ToString(), "")
 
         Catch ex As Exception
-            MessageBox.Show("Failed to save: " & ex.Message)
+            MessageBox.Show("Error selecting row: " & ex.Message)
         End Try
-
-    End Sub
-    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-        Using r = GetRows("Customer_Details", "Customer_Name", ComboBox2.Text)
-            If r.Read() Then
-                TextBox2.Text = r("Address").ToString()
-
-            End If
-
-        End Using
-
-
     End Sub
 
-    Private Sub Label8_Click(sender As Object, e As EventArgs) Handles Label8.Click
+    Private Sub DataGridView1_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellDoubleClick
+        If e.RowIndex < 0 Then Exit Sub
 
+        Try
+            Dim pay As New Payable()
+
+            pay.SelectedPO_ID = DataGridView1.Rows(e.RowIndex).Cells("PO_ID").Value.ToString()
+            '   pay.SelectedSupplierID = DataGridView1.Rows(e.RowIndex).Cells("SupplierID").Value.ToString()
+            pay.SelectedCustomer = ComboBox1.Text.ToString()
+            pay.SelectedTax = DataGridView1.Rows(e.RowIndex).Cells("VAT").Value.ToString()
+            pay.SelectedQty = CInt(DataGridView1.Rows(e.RowIndex).Cells("Quantity").Value)
+            pay.InvoiceAmount = CDec(DataGridView1.Rows(e.RowIndex).Cells("Total").Value)
+
+            ' only use this if Product_ID is in your grid or table
+            ' pay.SelectedProductID = DataGridView1.Rows(e.RowIndex).Cells("Product_ID").Value.ToString()
+
+            pay.ShowDialog()
+
+        Catch ex As Exception
+            MessageBox.Show("Error opening payment form: " & ex.Message)
+        End Try
     End Sub
 
-    Private Sub TextBox5_TextChanged(sender As Object, e As EventArgs) Handles TextBox5.TextChanged
-        UpdateTotals()
-
-        'For Each row As DataGridViewRow In DataGridView1.Rows
-        '    If row.IsNewRow Then Continue For row.Cells("Delivery").Value = CDec(TextBox5.Text)
-        '    RecalculateRow(row.Index)
-        'Next
-    End Sub
-    'Private Sub RecalculateRow(rowIndex As Integer)
-
-    '    If rowIndex < 0 Then Exit Sub
-
-    '    Dim row As DataGridViewRow = DataGridView1.Rows(rowIndex)
-    '    CalculateRow(row)
-    '    UpdateTotals()
-
-    'End Sub
-
-    Private Sub ComboBox4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox4.SelectedIndexChanged
-        Dim selectedProduct As String = ComboBox4.Text.Trim()
-        If selectedProduct = "" Then Exit Sub
-        UpdateTotals()
+    Private Sub LoadCompanyInfo()
         Try
             Using conn As New OleDbConnection(ConnectionString)
                 conn.Open()
 
-                Dim sql As String =
-                    "SELECT Unit_Price FROM Product_Details WHERE Product_Name = ?"
+                Dim cmd As New OleDbCommand("SELECT TOP 1 * FROM [CompanySettings]", conn)
+                Using dr As OleDbDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
+                        Label12.Text = dr("CompanyName").ToString()
+                        Label13.Text = dr("Address").ToString()
+                        Label14.Text = dr("Phone").ToString()
+                        Label15.Text = dr("Email").ToString()
 
-                Using cmd As New OleDbCommand(sql, conn)
-                    cmd.Parameters.Add("?", OleDbType.VarWChar).Value = selectedProduct
-
-                    Dim result = cmd.ExecuteScalar()
-
-                    If result IsNot Nothing AndAlso Not IsDBNull(result) Then
-                        TextBox7.Text = CDec(result).ToString("F2")
-                    Else
-                        TextBox7.Text = "0.00"
+                        Dim logoPath As String = dr("LogoPath").ToString()
+                        If IO.File.Exists(logoPath) Then
+                            PictureBox1.Image = Image.FromFile(logoPath)
+                        End If
                     End If
-
                 End Using
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("Error loading unit price: " & ex.Message)
+            MessageBox.Show("Failed to load company info: " & ex.Message)
         End Try
     End Sub
 
-    Private Sub TextBox10_TextChanged(sender As Object, e As EventArgs) Handles TextBox10.TextChanged
-
-    End Sub
-
-    Private Sub TextBox11_TextChanged(sender As Object, e As EventArgs) Handles TextBox11.TextChanged
-        UpdateTotals()
-    End Sub
 End Class

@@ -102,6 +102,60 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CRM Dashboard\Activity Details.Designer.vb">
+      <DependentUpon>Activity Details.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Activity Details.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Activity Dashboard.Designer.vb">
+      <DependentUpon>Activity Dashboard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Activity Dashboard.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\DashboardMarketing.Designer.vb">
+      <DependentUpon>DashboardMarketing.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\DashboardMarketing.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Lead Report.Designer.vb">
+      <DependentUpon>Lead Report.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Lead Report.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Manage User.Designer.vb">
+      <DependentUpon>Manage User.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Manage User.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Manage_Activity.Designer.vb">
+      <DependentUpon>Manage_Activity.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Manage_Activity.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\MarketingTemplete.Designer.vb">
+      <DependentUpon>MarketingTemplete.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\MarketingTemplete.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\My Tasks.Designer.vb">
+      <DependentUpon>My Tasks.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\My Tasks.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Activity Report.Designer.vb">
+      <DependentUpon>Activity Report.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Activity Report.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Inventory Dashboard\BankAccounts.Designer.vb">
       <DependentUpon>BankAccounts.vb</DependentUpon>
     </Compile>
@@ -112,6 +166,30 @@
       <DependentUpon>Bank_Transaction.vb</DependentUpon>
     </Compile>
     <Compile Include="Inventory Dashboard\Bank_Transaction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Campaign Activity Scheduler.Designer.vb">
+      <DependentUpon>Campaign Activity Scheduler.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Campaign Activity Scheduler.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Campaign Management.Designer.vb">
+      <DependentUpon>Campaign Management.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Campaign Management.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\Campaign Responses.Designer.vb">
+      <DependentUpon>Campaign Responses.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Campaign Responses.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CRM Dashboard\MarketingReport.Designer.vb">
+      <DependentUpon>MarketingReport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\MarketingReport.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Inventory Dashboard\Order Form.Designer.vb">
@@ -132,22 +210,16 @@
     <Compile Include="Inventory Dashboard\Supplier.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="CRM Dashboard\Target List Management.Designer.vb">
+      <DependentUpon>Target List Management.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CRM Dashboard\Target List Management.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Invoice Dashboard\Bank Dashboard.Designer.vb">
       <DependentUpon>Bank Dashboard.vb</DependentUpon>
     </Compile>
     <Compile Include="Invoice Dashboard\Bank Dashboard.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Invoice Dashboard\Cart.Designer.vb">
-      <DependentUpon>Cart.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Invoice Dashboard\Cart.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Invoice Dashboard\Order Sales.Designer.vb">
-      <DependentUpon>Order Sales.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Invoice Dashboard\Order Sales.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Invoice Dashboard\Payable.Designer.vb">
@@ -323,6 +395,13 @@
     <Compile Include="Inventory Dashboard\Supplier Management.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Sales Dashboard\Session.vb" />
+    <Compile Include="Sales Templete.Designer.vb">
+      <DependentUpon>Sales Templete.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Sales Templete.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="_Rama_s_IT_CentreDataSet.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -330,11 +409,50 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CRM Dashboard\Activity Details.resx">
+      <DependentUpon>Activity Details.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Activity Dashboard.resx">
+      <DependentUpon>Activity Dashboard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\DashboardMarketing.resx">
+      <DependentUpon>DashboardMarketing.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Lead Report.resx">
+      <DependentUpon>Lead Report.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Manage User.resx">
+      <DependentUpon>Manage User.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Manage_Activity.resx">
+      <DependentUpon>Manage_Activity.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\MarketingTemplete.resx">
+      <DependentUpon>MarketingTemplete.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\My Tasks.resx">
+      <DependentUpon>My Tasks.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Activity Report.resx">
+      <DependentUpon>Activity Report.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Inventory Dashboard\BankAccounts.resx">
       <DependentUpon>BankAccounts.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Inventory Dashboard\Bank_Transaction.resx">
       <DependentUpon>Bank_Transaction.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Campaign Activity Scheduler.resx">
+      <DependentUpon>Campaign Activity Scheduler.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Campaign Management.resx">
+      <DependentUpon>Campaign Management.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Campaign Responses.resx">
+      <DependentUpon>Campaign Responses.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\MarketingReport.resx">
+      <DependentUpon>MarketingReport.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Inventory Dashboard\Order Form.resx">
       <DependentUpon>Order Form.vb</DependentUpon>
@@ -345,14 +463,11 @@
     <EmbeddedResource Include="Inventory Dashboard\Supplier.resx">
       <DependentUpon>Supplier.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CRM Dashboard\Target List Management.resx">
+      <DependentUpon>Target List Management.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Invoice Dashboard\Bank Dashboard.resx">
       <DependentUpon>Bank Dashboard.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Invoice Dashboard\Cart.resx">
-      <DependentUpon>Cart.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Invoice Dashboard\Order Sales.resx">
-      <DependentUpon>Order Sales.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoice Dashboard\Payable.resx">
       <DependentUpon>Payable.vb</DependentUpon>
@@ -437,6 +552,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Inventory Dashboard\Supplier Management.resx">
       <DependentUpon>Supplier Management.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sales Templete.resx">
+      <DependentUpon>Sales Templete.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

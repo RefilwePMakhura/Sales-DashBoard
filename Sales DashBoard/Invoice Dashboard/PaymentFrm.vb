@@ -2,12 +2,18 @@
 Imports System.Data.OleDb
 Public Class PaymentFrm
     Dim conn As New OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=Rama's IT Centre.accdb")
+
+    Private SelectedAccount_ID As String = ""
+    Public Property SelectedSupplierID As String
+    Public Property SelectedPO_ID As String
     Private Sub Payment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cmbPaymentMethod.Items.Add("Cash")
         cmbPaymentMethod.Items.Add("Voucher")
         cmbPaymentMethod.Items.Add("Card")
         cmbPaymentMethod.Items.Add("EFT")
-        ComboBox1.Items.AddRange(New String() {"Standard", "Absa", "Nedbank", "Capitec"})
+        ComboBox1.Items.AddRange(New String() {"Standard", "Absa"})
+        LoadAcc()
+        '      txtInvoiceNo.Text = SelectedPO_ID
         ' cmbStatus.Items.AddRange(New String() {"Pending", "Paid"})
         'If TextBox1.Text = "Paid" Then
         '    btnSavePayment.Enabled = False
@@ -47,6 +53,60 @@ Public Class PaymentFrm
         End If
 
     End Sub
+    Private Function GetOutstandingForPO() As Decimal
+        Try
+            Using conn As New OleDbConnection(ConnectionString)
+                conn.Open()
+
+                Using cmd As New OleDbCommand("SELECT Nz([Total],0) FROM [Invoice_Details] WHERE [InvoiceID]=?", conn)
+                    cmd.Parameters.AddWithValue("?", SelectedPO_ID)
+
+                    Dim result = cmd.ExecuteScalar()
+
+                    If result Is Nothing OrElse IsDBNull(result) Then
+                        Return 0D
+                    Else
+                        Return Convert.ToDecimal(result)
+                    End If
+                End Using
+            End Using
+
+        Catch
+            Return 0D
+        End Try
+    End Function
+    Private Function GetSupplierOutstanding() As Decimal
+
+        Using conn As New OleDbConnection(ConnectionString)
+
+            conn.Open()
+
+            Using cmd As New OleDbCommand(
+            "SELECT Owed 
+FROM Payment 
+WHERE InvoiceID=?", conn)
+
+                cmd.Parameters.AddWithValue("?", SelectedPO_ID)
+
+                Dim result = cmd.ExecuteScalar()
+
+                If result Is Nothing OrElse
+                IsDBNull(result) Then
+
+                    Return 0
+
+                Else
+
+                    Return CDec(result)
+
+                End If
+
+            End Using
+
+        End Using
+
+    End Function
+
 
     ' PROCESS PAYMENT BUTTON (APPLY / PAY)
     'Private Sub btnPay_Click(sender As Object, e As EventArgs) Handles btnPay.Click
@@ -122,7 +182,88 @@ Public Class PaymentFrm
 
     '    End Using
     'End Sub
+    Private Sub LoadAcc()
+        Try
+            Using conn As New OleDbConnection(ConnectionString)
+                conn.Open()
 
+                Dim da As New OleDbDataAdapter(
+                "SELECT [BankAccountID], [BankName] FROM [BankAccount] WHERE [IsActive]=True", conn)
+
+                Dim dt As New DataTable
+                da.Fill(dt)
+
+                ComboBox1.DataSource = dt
+                ComboBox1.DisplayMember = "BankName"
+                ComboBox1.ValueMember = "BankAccountID"
+
+                If ComboBox1.Items.Count > 0 Then
+                    ComboBox1.SelectedIndex = 0
+                Else
+                    ComboBox1.SelectedIndex = -1
+                End If
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("Failed to load bank accounts: " & ex.Message)
+        End Try
+    End Sub
+
+
+    Private Function AdjustAmount(amount As Decimal) As Boolean
+        Try
+            If String.IsNullOrWhiteSpace(SelectedAccount_ID) Then
+                MessageBox.Show("Select bank account first.")
+                Return False
+            End If
+
+            Using conn As New OleDbConnection(ConnectionString)
+                conn.Open()
+
+                Dim currentBalance As Decimal = 0D
+
+                Using cmd As New OleDbCommand(
+                    "SELECT IIf(IsNull([ClosingBalance]),0,[ClosingBalance]) FROM [BankAccount] WHERE [BankName]=?", conn)
+
+                    cmd.Parameters.AddWithValue("?", ComboBox1.Text)
+
+                    Dim result As Object = cmd.ExecuteScalar()
+
+                    If result Is Nothing OrElse IsDBNull(result) Then
+                        MessageBox.Show("Account not found.")
+                        Return False
+                    End If
+
+                    currentBalance = Convert.ToDecimal(result)
+                End Using
+
+                If currentBalance < amount Then
+                    MessageBox.Show("Insufficient funds. Available R" & currentBalance.ToString("0.00"))
+                    Return False
+                End If
+
+                Using cmd As New OleDbCommand(
+                    "UPDATE [BankAccount] SET [ClosingBalance] = IIf(IsNull([ClosingBalance]),0,[ClosingBalance]) - ? WHERE [BankName]=?", conn)
+
+                    cmd.Parameters.AddWithValue("?", amount)
+                    cmd.Parameters.AddWithValue("?", ComboBox1.Text)
+
+                    Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
+
+                    If rowsAffected = 0 Then
+                        MessageBox.Show("Bank account was not updated.")
+                        Return False
+                    End If
+                End Using
+            End Using
+
+            Return True
+
+        Catch ex As Exception
+            MessageBox.Show("AdjustAmount error: " & ex.Message)
+            Return False
+        End Try
+    End Function
     ' SAVE PAYMENT BUTTON
     Private Sub btnSavePayments_Click(sender As Object, e As EventArgs) Handles btnSavePayment.Click
 
@@ -133,7 +274,7 @@ Public Class PaymentFrm
 
         Using conn As New OleDbConnection(ConnectionString)
             conn.Open()
-            Dim trans = conn.BeginTransaction()
+            Dim trans As OleDbTransaction = conn.BeginTransaction
 
             Try
 
@@ -147,24 +288,54 @@ Public Class PaymentFrm
                 getcmd.ExecuteReader()
                 'dr.Read()
 
-                Dim currentPaid As String = txtAmountPaid.Text
-                Dim currentBalance As String = txtTotalAmount.Text
-                'dr.Close()
+                Dim invoice As Decimal
+                Dim paid As Decimal
 
-                Dim newpaidTotal As String = currentPaid + paymentAmount
-                Dim NewBalance As String = currentBalance - paymentAmount
+                If Not Decimal.TryParse(
+        txtTotalAmount.Text, invoice) Then Exit Sub
 
+                If Not Decimal.TryParse(
+        txtAmountPaid.Text, paid) Then Exit Sub
 
+                If paid <= 0 Then
 
-                Dim newStatus As String
+                    MessageBox.Show("Invalid payment")
 
-                If NewBalance < 0 Then
-                    NewBalance = 0
-                    newStatus = "Paid"
-                Else
-                    newStatus = "Partially Paid"
+                    Exit Sub
+
+                End If
+                If Not Decimal.TryParse(txtAmountPaid.Text, paid) Then
+                    MessageBox.Show("Enter amount paid.")
+                    Exit Sub
                 End If
 
+                If paid <= 0 Then
+                    MessageBox.Show("Invalid payment amount.")
+                    Exit Sub
+                End If
+
+                'If TextBox4.Text > TextBox3.Text Then
+                '    MessageBox.Show("Payment exceeds invoice amount.")
+                '    Exit Sub
+                'End If
+
+
+
+                If Not AdjustAmount(paid) Then Exit Sub
+
+                Dim NewBalance As Decimal =
+        Math.Max(0, invoice - paid)
+
+
+                Dim status As String
+                If NewBalance = 0D Then
+                    status = "Paid"
+                Else
+                    status = "Partially Paid"
+                End If
+
+                txtChange.Text = NewBalance.ToString()
+                TextBox1.Text = status
 
                 'txtTotalAmount.Text = NewBalance
                 Dim updatecmd As New OleDbCommand(
@@ -172,22 +343,20 @@ Public Class PaymentFrm
                     SET Status = ?
                     WHERE InvoiceID =?", conn, trans)
 
-                updatecmd.Parameters.AddWithValue("@Status", newStatus)
+                updatecmd.Parameters.AddWithValue("@Status", status)
                 updatecmd.Parameters.AddWithValue("@InvoiceID", InvoiceNo)
                 ' updatecmd.Parameters.AddWithValue("@Total_Amount", NewBalance)
                 updatecmd.ExecuteNonQuery()
 
 
-                Dim cmd As New OleDbCommand("INSERT INTO [Payment] ([InvoiceID], [Total_Amount], [Payment_Method], [Amount_Paid], [Status])" & "VALUES (?,?,?,?,?)", conn, trans)
+                Dim cmd As New OleDbCommand("INSERT INTO [Payment] ([InvoiceID], [Total_Amount], [Owed], [Payment_Method], [Amount_Paid], [Status])" & "VALUES (?,?,?,?,?,?)", conn, trans)
                 cmd.Parameters.AddWithValue("InvoiceID", txtInvoiceNo.Text)
                 cmd.Parameters.AddWithValue("Total_Amount", txtTotalAmount.Text)
+                cmd.Parameters.AddWithValue("Owed", txtChange.Text)
                 cmd.Parameters.AddWithValue("Payment_Method", cmbPaymentMethod.Text)
                 cmd.Parameters.AddWithValue("Amount_Paid", txtAmountPaid.Text)
-                cmd.Parameters.AddWithValue("Status", newStatus)
+                cmd.Parameters.AddWithValue("Status", status)
                 cmd.ExecuteNonQuery()
-
-
-
 
                 Using cmdStock As New OleDbCommand("UPDATE [BankAccount] SET ClosingBalance = IIf(ClosingBalance Is Null, 0, ClosingBalance) + ? WHERE BankName = ?", conn, trans)
 
@@ -196,26 +365,47 @@ Public Class PaymentFrm
                     cmdStock.ExecuteNonQuery()
                 End Using
 
+
+                Using cmdTrans As New OleDbCommand("INSERT INTO [BankTransaction] ([TransactionID], [BankAccount], [TransactionDate], [Amount], [Outstanding], [Type], [Reference], [ReferenceID])VALUES (?,?,?,?,?,?,?,?)", conn, trans)
+                    cmdTrans.Parameters.AddWithValue("?", txtInvoiceNo.Text)
+                    cmdTrans.Parameters.AddWithValue("?", ComboBox1.Text)
+                    cmdTrans.Parameters.AddWithValue("?", DateTimePicker1.Value.Date)
+                    cmdTrans.Parameters.AddWithValue("?", paymentAmount)
+                    cmdTrans.Parameters.AddWithValue("?", txtChange.Text)
+                    cmdTrans.Parameters.AddWithValue("?", "Deposit")
+                    cmdTrans.Parameters.AddWithValue("?", "Invoice")
+                    cmdTrans.Parameters.AddWithValue("?", Generaterefence)
+                    cmdTrans.ExecuteNonQuery()
+                End Using
+                Using cmdoutstanding As New OleDbCommand(
+                        "UPDATE [Invoice_Details] SET [Total]=? WHERE [InvoiceID]=?",
+                        conn, trans)
+
+                    cmdoutstanding.Parameters.AddWithValue("?", NewBalance)
+                    '   cmd.Parameters.AddWithValue("?", status)
+                    cmd.Parameters.AddWithValue("?", SelectedPO_ID)
+
+                    cmd.ExecuteNonQuery()
+                End Using
                 trans.Commit()
                 MessageBox.Show("Payment Saved Successfully")
                 conn.Close()
                 UpdateInvoiceAsPaid()
                 frmInvoiceManagement.UpdateInvoiceStatus()
-                BankAccounts.ShowDialog()
                 BankAccounts.LoadBankAccount()
 
                 If Application.OpenForms().OfType(Of Order_Form).Any Then
                     Dim frm As Order_Form = Application.OpenForms().OfType(Of Order_Form).First
 
                     'frm.LoadOrderData()
-                    frm.ColorGrid()
+                    '       frm.ColorGrid()
                 End If
 
             Catch ex As Exception
                 'ShowStack()
-                '' trans.Rollback()
-                MessageBox.Show("Error saving payment:" & ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                '  MessageBox.Show("Stack Trace:", ex.StackTrace)
+                trans.Rollback()
+                MessageBox.Show("Error saving payment:" & vbCrLf & ex.Message, "Error")
+                MessageBox.Show("Stack Trace:", ex.StackTrace)
             End Try
         End Using
 
@@ -307,10 +497,11 @@ Public Class PaymentFrm
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        If ComboBox1.SelectedIndex = 0 Then
-
+        If ComboBox1.SelectedValue IsNot Nothing AndAlso Not IsDBNull(ComboBox1.SelectedValue) Then
+            SelectedAccount_ID = ComboBox1.SelectedValue.ToString()
         End If
 
     End Sub
+
 End Class
 

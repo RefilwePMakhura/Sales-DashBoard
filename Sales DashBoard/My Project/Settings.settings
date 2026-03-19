@@ -13,11 +13,26 @@
     <Setting Name="UserName" Type="System.String" Scope="User">
       <Value Profile="(Default)">refilwemakhura12@gmail.com</Value>
     </Setting>
-    <Setting Name="SmptPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="SmptPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">587</Value>
     </Setting>
-    <Setting Name="Smpt" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="SmptHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)"> smtp.gmail.com</Value>
+    </Setting>
+    <Setting Name="SmptSslEnable" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SmptAuth" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SmptUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)">refilwemakhura12@gmail.com</Value>
+    </Setting>
+    <Setting Name="SmptPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pktb glrx opor dbky</Value>
+    </Setting>
+    <Setting Name="SmptFrom" Type="System.String" Scope="User">
+      <Value Profile="(Default)">refilwemakhura12@gmail.com</Value>
     </Setting>
   </Settings>
 </SettingsFile>

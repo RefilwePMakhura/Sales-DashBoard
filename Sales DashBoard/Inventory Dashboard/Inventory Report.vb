@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿
+Imports System.IO
 Public Class Inventory_Report
 
     Private ReadOnly dataFilePath As String = Path.Combine("C:\Temp\inventory_reports", "reports.csv")

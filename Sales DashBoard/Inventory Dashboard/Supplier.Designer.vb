@@ -28,16 +28,16 @@ Partial Class Supplier
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -106,6 +106,21 @@ Partial Class Supplier
         Me.Panel1.Size = New System.Drawing.Size(483, 212)
         Me.Panel1.TabIndex = 13
         '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(113, 10)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(323, 20)
+        Me.TextBox1.TabIndex = 30
+        '
+        'TextBox6
+        '
+        Me.TextBox6.Location = New System.Drawing.Point(113, 137)
+        Me.TextBox6.Multiline = True
+        Me.TextBox6.Name = "TextBox6"
+        Me.TextBox6.Size = New System.Drawing.Size(323, 71)
+        Me.TextBox6.TabIndex = 8
+        '
         'TextBox5
         '
         Me.TextBox5.Location = New System.Drawing.Point(113, 111)
@@ -126,14 +141,6 @@ Partial Class Supplier
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(323, 20)
         Me.TextBox3.TabIndex = 27
-        '
-        'TextBox6
-        '
-        Me.TextBox6.Location = New System.Drawing.Point(113, 137)
-        Me.TextBox6.Multiline = True
-        Me.TextBox6.Name = "TextBox6"
-        Me.TextBox6.Size = New System.Drawing.Size(323, 71)
-        Me.TextBox6.TabIndex = 8
         '
         'Panel4
         '
@@ -184,13 +191,6 @@ Partial Class Supplier
         Me.DataGridView1.Size = New System.Drawing.Size(483, 150)
         Me.DataGridView1.TabIndex = 31
         '
-        'TextBox1
-        '
-        Me.TextBox1.Location = New System.Drawing.Point(113, 10)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(323, 20)
-        Me.TextBox1.TabIndex = 30
-        '
         'Supplier
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -200,6 +200,7 @@ Partial Class Supplier
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "Supplier"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Supplier"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()

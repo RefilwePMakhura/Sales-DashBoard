@@ -39,7 +39,7 @@ Partial Class Register
         Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.TextBox7 = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.TextBox8 = New System.Windows.Forms.TextBox()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -179,16 +179,17 @@ Partial Class Register
         Me.Label8.AutoSize = True
         Me.Label8.Location = New System.Drawing.Point(30, 291)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(94, 13)
+        Me.Label8.Size = New System.Drawing.Size(32, 13)
         Me.Label8.TabIndex = 16
-        Me.Label8.Text = "Confirm Password:"
+        Me.Label8.Text = "Role:"
         '
-        'TextBox8
+        'ComboBox1
         '
-        Me.TextBox8.Location = New System.Drawing.Point(151, 291)
-        Me.TextBox8.Name = "TextBox8"
-        Me.TextBox8.Size = New System.Drawing.Size(140, 20)
-        Me.TextBox8.TabIndex = 17
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(151, 291)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(140, 21)
+        Me.ComboBox1.TabIndex = 17
         '
         'Register
         '
@@ -196,7 +197,7 @@ Partial Class Register
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.ActiveCaption
         Me.ClientSize = New System.Drawing.Size(314, 388)
-        Me.Controls.Add(Me.TextBox8)
+        Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.TextBox7)
         Me.Controls.Add(Me.TextBox6)
@@ -215,6 +216,7 @@ Partial Class Register
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Name = "Register"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Register"
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -238,5 +240,5 @@ Partial Class Register
     Friend WithEvents TextBox6 As TextBox
     Friend WithEvents TextBox7 As TextBox
     Friend WithEvents Label8 As Label
-    Friend WithEvents TextBox8 As TextBox
+    Friend WithEvents ComboBox1 As ComboBox
 End Class
