@@ -102,6 +102,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About Us.Designer.vb">
+      <DependentUpon>About Us.vb</DependentUpon>
+    </Compile>
+    <Compile Include="About Us.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="CRM Dashboard\Activity Details.Designer.vb">
       <DependentUpon>Activity Details.vb</DependentUpon>
     </Compile>
@@ -409,6 +415,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="About Us.resx">
+      <DependentUpon>About Us.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CRM Dashboard\Activity Details.resx">
       <DependentUpon>Activity Details.vb</DependentUpon>
     </EmbeddedResource>

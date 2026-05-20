@@ -70,30 +70,30 @@ Public Class Login
         End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles btnSignUp.Click
-        Settings.ShowDialog()
+        Register.ShowDialog()
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+        About_Us.ShowDialog()
+        'Try
+        '    Dim filePath As String = "C:\Users\Refilwe\Documents\Screen Dump.docx"
 
-        Try
-            Dim filePath As String = "C:\Users\Refilwe\Documents\Screen Dump.docx"
+        '    If Not File.Exists(filePath) Then
+        '        MessageBox.Show("Guide file not found in Downloads." & vbCrLf & filePath,
+        '                        "Guide",
+        '                        MessageBoxButtons.OK,
+        '                        MessageBoxIcon.Warning)
+        '        Exit Sub
+        '    End If
 
-            If Not File.Exists(filePath) Then
-                MessageBox.Show("Guide file not found in Downloads." & vbCrLf & filePath,
-                                "Guide",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning)
-                Exit Sub
-            End If
+        '    Process.Start(filePath)
 
-            Process.Start(filePath)
-
-        Catch ex As Exception
-            MessageBox.Show("Error opening guide: " & ex.Message,
-                            "Guide",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error)
-        End Try
+        'Catch ex As Exception
+        '    MessageBox.Show("Error opening guide: " & ex.Message,
+        '                    "Guide",
+        '                    MessageBoxButtons.OK,
+        '                    MessageBoxIcon.Error)
+        'End Try
     End Sub
 
 
